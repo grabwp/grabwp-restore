@@ -83,10 +83,38 @@ class GrabWP_Restore_Step_Controller {
 			return $result;
 		}
 
+		$this->reactivate_self( $dst_prefix );
+
 		return [
 			'message' => __( 'Database imported and prefixes rewritten.', 'grabwp-restore' ),
 			'data'    => [ 'dst_prefix' => $dst_prefix ],
 		];
+	}
+
+	private function reactivate_self( $dst_prefix ) {
+		global $wpdb;
+
+		$table   = $dst_prefix . 'options';
+		$self    = 'grabwp-restore/grabwp-restore.php';
+		$row     = $wpdb->get_row(
+			$wpdb->prepare( "SELECT option_value FROM `{$table}` WHERE option_name = %s", 'active_plugins' ),
+			ARRAY_A
+		);
+		$plugins = $row ? maybe_unserialize( $row['option_value'] ) : [];
+		if ( ! is_array( $plugins ) ) {
+			$plugins = [];
+		}
+		if ( ! in_array( $self, $plugins, true ) ) {
+			$plugins[] = $self;
+			$wpdb->update(
+				$table,
+				[ 'option_value' => maybe_serialize( $plugins ) ],
+				[ 'option_name' => 'active_plugins' ],
+				[ '%s' ],
+				[ '%s' ]
+			);
+		}
+		wp_cache_delete( 'alloptions', 'options' );
 	}
 
 	private function step_restore_uploads( $state ) {
@@ -157,7 +185,11 @@ class GrabWP_Restore_Step_Controller {
 		}
 
 		flush_rewrite_rules();
-		delete_transient( 'grabwp_restore_active_job' );
+
+		$lock_file = GRABWP_RESTORE_TMP_DIR . '/jobs/active.lock';
+		if ( file_exists( $lock_file ) ) {
+			unlink( $lock_file );
+		}
 
 		return [ 'message' => __( 'Restore complete.', 'grabwp-restore' ) ];
 	}

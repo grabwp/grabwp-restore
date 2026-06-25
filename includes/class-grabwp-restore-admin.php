@@ -19,6 +19,7 @@ class GrabWP_Restore_Admin {
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'wp_ajax_grabwp_restore_upload_chunk', [ $this, 'ajax_upload_chunk' ] );
 		add_action( 'wp_ajax_grabwp_restore_step', [ $this, 'ajax_step' ] );
+		add_action( 'wp_ajax_nopriv_grabwp_restore_step', [ $this, 'ajax_step' ] );
 	}
 
 	public function add_menu_page() {
@@ -51,7 +52,6 @@ class GrabWP_Restore_Admin {
 		wp_localize_script( 'grabwp-restore-admin', 'grabwpRestore', [
 			'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
 			'uploadNonce' => wp_create_nonce( 'grabwp_restore_upload' ),
-			'stepNonce'   => wp_create_nonce( 'grabwp_restore_step' ),
 			'i18n'        => [
 				'confirmStart' => __( 'This will permanently replace your entire site. Continue?', 'grabwp-restore' ),
 				'uploading'    => __( 'Uploading...', 'grabwp-restore' ),
@@ -107,34 +107,42 @@ class GrabWP_Restore_Admin {
 			return;
 		}
 
-		if ( get_transient( 'grabwp_restore_active_job' ) ) {
+		if ( $this->load_active_job() ) {
 			wp_send_json_error( [ 'message' => 'A restore is already in progress.' ] );
 		}
 
-		$job_id = bin2hex( random_bytes( 16 ) );
-		set_transient( 'grabwp_restore_active_job', $job_id, self::JOB_TTL );
-		$state  = [
+		$job_id     = bin2hex( random_bytes( 16 ) );
+		$job_secret = bin2hex( random_bytes( 32 ) );
+		$job_token  = hash_hmac( 'sha256', $job_id, $job_secret );
+		$state      = [
 			'step'        => 0,
 			'total'       => self::TOTAL_STEPS,
 			'zip_path'    => $target,
 			'current_url' => site_url(),
 			'ts'          => time(),
+			'secret'      => $job_secret,
 		];
-		set_transient( 'grabwp_restore_job_' . $job_id, $state, self::JOB_TTL );
+		$this->save_job( $job_id, $state );
+		$this->save_active_job( $job_id );
 
-		wp_send_json_success( [ 'job_id' => $job_id ] );
+		wp_send_json_success( [
+			'job_id'    => $job_id,
+			'job_token' => $job_token,
+		] );
 	}
 
 	public function ajax_step() {
-		check_ajax_referer( 'grabwp_restore_step', 'nonce' );
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => 'Unauthorized' ], 403 );
-		}
+		$job_id    = sanitize_text_field( $_POST['job_id'] ?? '' );
+		$job_token = sanitize_text_field( $_POST['job_token'] ?? '' );
 
-		$job_id = sanitize_text_field( $_POST['job_id'] ?? '' );
-		$state  = get_transient( 'grabwp_restore_job_' . $job_id );
+		$state = $this->load_job( $job_id );
 		if ( ! $state ) {
 			wp_send_json_error( [ 'message' => 'Job not found or expired.' ] );
+		}
+
+		$expected_token = hash_hmac( 'sha256', $job_id, $state['secret'] ?? '' );
+		if ( ! hash_equals( $expected_token, $job_token ) ) {
+			wp_send_json_error( [ 'message' => 'Invalid job token.' ], 403 );
 		}
 
 		$next = (int) $state['step'] + 1;
@@ -154,7 +162,7 @@ class GrabWP_Restore_Admin {
 		if ( ! empty( $result['data'] ) ) {
 			$state = array_merge( $state, $result['data'] );
 		}
-		set_transient( 'grabwp_restore_job_' . $job_id, $state, self::JOB_TTL );
+		$this->save_job( $job_id, $state );
 
 		wp_send_json_success( [
 			'step'    => $next,
@@ -164,4 +172,61 @@ class GrabWP_Restore_Admin {
 		] );
 	}
 
+	private function job_dir() {
+		$dir = GRABWP_RESTORE_TMP_DIR . '/jobs';
+		wp_mkdir_p( $dir );
+		$htaccess = $dir . '/.htaccess';
+		if ( ! file_exists( $htaccess ) ) {
+			file_put_contents( $htaccess, "Deny from all\n" );
+		}
+		return $dir;
+	}
+
+	private function save_job( $job_id, $state ) {
+		$file = $this->job_dir() . '/' . $job_id . '.json';
+		file_put_contents( $file, wp_json_encode( $state ), LOCK_EX );
+	}
+
+	private function load_job( $job_id ) {
+		if ( ! preg_match( '/^[a-f0-9]{32}$/', $job_id ) ) {
+			return false;
+		}
+		$file = $this->job_dir() . '/' . $job_id . '.json';
+		if ( ! file_exists( $file ) ) {
+			return false;
+		}
+		if ( ( time() - filemtime( $file ) ) > self::JOB_TTL ) {
+			unlink( $file );
+			return false;
+		}
+		return json_decode( file_get_contents( $file ), true );
+	}
+
+	private function save_active_job( $job_id ) {
+		file_put_contents( $this->job_dir() . '/active.lock', $job_id, LOCK_EX );
+	}
+
+	private function load_active_job() {
+		$file = $this->job_dir() . '/active.lock';
+		if ( ! file_exists( $file ) ) {
+			return false;
+		}
+		$active_id = trim( file_get_contents( $file ) );
+		if ( ! $active_id ) {
+			return false;
+		}
+		$state = $this->load_job( $active_id );
+		if ( ! $state ) {
+			unlink( $file );
+			return false;
+		}
+		return $active_id;
+	}
+
+	private function clear_active_job() {
+		$file = $this->job_dir() . '/active.lock';
+		if ( file_exists( $file ) ) {
+			unlink( $file );
+		}
+	}
 }

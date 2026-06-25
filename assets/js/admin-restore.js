@@ -80,7 +80,7 @@
 					if (chunkIndex < totalChunks) {
 						sendChunk();
 					} else {
-						runStep(res.data.job_id);
+						runStep(res.data.job_id, res.data.job_token);
 					}
 				},
 				error: function () {
@@ -91,11 +91,11 @@
 		sendChunk();
 	}
 
-	function runStep(jobId) {
+	function runStep(jobId, jobToken) {
 		$.post(grabwpRestore.ajaxUrl, {
 			action: 'grabwp_restore_step',
-			nonce: grabwpRestore.stepNonce,
-			job_id: jobId
+			job_id: jobId,
+			job_token: jobToken
 		}, function (res) {
 			if (res.success) {
 				var step  = res.data.step;
@@ -107,10 +107,10 @@
 				if (res.data.done) {
 					showSuccess();
 				} else {
-					setTimeout(function () { runStep(jobId); }, 500);
+					setTimeout(function () { runStep(jobId, jobToken); }, 500);
 				}
 			} else {
-				showError(res.data.message || 'Restore step failed.');
+				showError(res.data ? res.data.message : 'Restore step failed.');
 			}
 		}).fail(function () {
 			showError('Step request failed. The server may have timed out.');

@@ -84,6 +84,7 @@ class GrabWP_Restore_Db_Importer {
 					if ( strlen( $statement ) > $max_packet ) {
 						error_log( '[GrabWP Restore] Skipping oversized statement (' . strlen( $statement ) . ' bytes)' );
 					} else {
+						$statement = $this->fix_text_defaults( $statement );
 						$wpdb->query( $statement );
 						if ( ! empty( $wpdb->last_error ) ) {
 							$errors[] = $wpdb->last_error . ' [SQL: ' . substr( $statement, 0, 120 ) . ']';
@@ -99,6 +100,7 @@ class GrabWP_Restore_Db_Importer {
 			$statement = $this->replace_collations( $wpdb, $statement );
 			$statement = trim( $statement );
 			if ( '' !== $statement && strlen( $statement ) <= $max_packet ) {
+				$statement = $this->fix_text_defaults( $statement );
 				$wpdb->query( $statement );
 				if ( ! empty( $wpdb->last_error ) ) {
 					$errors[] = $wpdb->last_error;
@@ -183,6 +185,17 @@ class GrabWP_Restore_Db_Importer {
 				[ '%s' ]
 			);
 		}
+	}
+
+	private function fix_text_defaults( $sql ) {
+		if ( stripos( $sql, 'CREATE TABLE' ) === false ) {
+			return $sql;
+		}
+		return preg_replace(
+			'/(`\w+`\s+(?:(?:tiny|medium|long)?(?:text|blob)|json|geometry))\s+(NOT\s+NULL\s+)?DEFAULT\s+(?:\'[^\']*\'|"[^"]*"|NULL|\d+)/i',
+			'$1 $2',
+			$sql
+		);
 	}
 
 	private function get_max_allowed_packet( $wpdb ) {
