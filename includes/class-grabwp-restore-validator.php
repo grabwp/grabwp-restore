@@ -65,8 +65,8 @@ class GrabWP_Restore_Validator {
 			return new WP_Error( 'mkdir_fail', 'Cannot create temp directory.' );
 		}
 
-		file_put_contents( $extract_dir . '/.htaccess', "Deny from all\n" );
-		file_put_contents( $extract_dir . '/index.html', '' );
+		file_put_contents( $extract_dir . '/.htaccess', "Deny from all\n" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		file_put_contents( $extract_dir . '/index.html', '' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 
 		$zip = new ZipArchive();
 		if ( true !== $zip->open( $zip_path ) ) {
@@ -112,7 +112,7 @@ class GrabWP_Restore_Validator {
 			return new WP_Error( 'missing_meta', 'metadata.json not found in extracted archive.' );
 		}
 
-		$raw  = file_get_contents( $meta_file );
+		$raw  = file_get_contents( $meta_file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reading local extracted metadata file.
 		$meta = json_decode( $raw, true );
 		if ( ! is_array( $meta ) ) {
 			return new WP_Error( 'bad_meta', 'metadata.json is invalid JSON.' );

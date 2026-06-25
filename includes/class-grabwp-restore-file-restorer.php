@@ -39,7 +39,7 @@ class GrabWP_Restore_File_Restorer {
 				self::recurse_copy( $src_sub, $tmp_sub );
 			}
 
-			if ( ! rename( $dir, $old_dir ) ) {
+			if ( ! rename( $dir, $old_dir ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- Atomic directory rename; WP_Filesystem::move() copies file-by-file.
 				return new WP_Error( 'rename_failed', 'Could not rename ' . $dir . ' to ' . $old_dir );
 			}
 			wp_mkdir_p( $dir );
@@ -49,7 +49,7 @@ class GrabWP_Restore_File_Restorer {
 				self::remove_dir( $tmp_sub );
 			}
 		} else {
-			if ( ! rename( $dir, $old_dir ) ) {
+			if ( ! rename( $dir, $old_dir ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- Atomic directory rename; WP_Filesystem::move() copies file-by-file.
 				return new WP_Error( 'rename_failed', 'Could not rename ' . $dir . ' to ' . $old_dir );
 			}
 			wp_mkdir_p( $dir );
@@ -109,13 +109,13 @@ class GrabWP_Restore_File_Restorer {
 		);
 		foreach ( $it as $entry ) {
 			if ( $entry->isLink() ) {
-				unlink( $entry->getPathname() );
+				wp_delete_file( $entry->getPathname() );
 			} elseif ( $entry->isDir() ) {
-				rmdir( $entry->getPathname() );
+				rmdir( $entry->getPathname() ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Removing already-emptied directory in recursive delete.
 			} else {
-				unlink( $entry->getPathname() );
+				wp_delete_file( $entry->getPathname() );
 			}
 		}
-		rmdir( $dir );
+		rmdir( $dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
 	}
 }

@@ -1,11 +1,9 @@
 <?php
 /**
  * Plugin Name: GrabWP Restore
- * Plugin URI:  https://grabwp.com
  * Description: Restore a full WordPress site from a GrabWP tenant export ZIP file.
  * Version:     1.0.0
- * Author:      GrabWP
- * Author URI:  https://grabwp.com
+ * Author:      taicv
  * License:     GPL-2.0-or-later
  * Text Domain: grabwp-restore
  * Requires PHP: 7.4

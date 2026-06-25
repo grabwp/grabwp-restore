@@ -77,8 +77,9 @@ class GrabWP_Restore_Step_Controller {
 		$src_prefix  = $state['src_prefix'];
 		$dst_prefix  = $GLOBALS['table_prefix'];
 		$current_url = $state['current_url'];
+		$meta        = $state['meta'] ?? [];
 
-		$result = $importer->import( $sql_file, $src_prefix, $dst_prefix, $current_url );
+		$result = $importer->import( $sql_file, $src_prefix, $dst_prefix, $current_url, $meta );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
@@ -86,7 +87,7 @@ class GrabWP_Restore_Step_Controller {
 		$this->reactivate_self( $dst_prefix );
 
 		return [
-			'message' => __( 'Database imported and prefixes rewritten.', 'grabwp-restore' ),
+			'message' => __( 'Database imported, prefixes rewritten, and URLs updated.', 'grabwp-restore' ),
 			'data'    => [ 'dst_prefix' => $dst_prefix ],
 		];
 	}
@@ -96,6 +97,8 @@ class GrabWP_Restore_Step_Controller {
 
 		$table   = $dst_prefix . 'options';
 		$self    = 'grabwp-restore/grabwp-restore.php';
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Must read freshly imported options table before WP core is aware of it.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from validated prefix, not user input.
 		$row     = $wpdb->get_row(
 			$wpdb->prepare( "SELECT option_value FROM `{$table}` WHERE option_name = %s", 'active_plugins' ),
 			ARRAY_A
@@ -114,6 +117,8 @@ class GrabWP_Restore_Step_Controller {
 				[ '%s' ]
 			);
 		}
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		wp_cache_delete( 'alloptions', 'options' );
 	}
 
@@ -176,7 +181,7 @@ class GrabWP_Restore_Step_Controller {
 		}
 
 		if ( ! empty( $state['zip_path'] ) && file_exists( $state['zip_path'] ) ) {
-			unlink( $state['zip_path'] );
+			wp_delete_file( $state['zip_path'] );
 		}
 
 		$upload_tmp = GRABWP_RESTORE_TMP_DIR . '/upload';
@@ -188,7 +193,7 @@ class GrabWP_Restore_Step_Controller {
 
 		$lock_file = GRABWP_RESTORE_TMP_DIR . '/jobs/active.lock';
 		if ( file_exists( $lock_file ) ) {
-			unlink( $lock_file );
+			wp_delete_file( $lock_file );
 		}
 
 		return [ 'message' => __( 'Restore complete.', 'grabwp-restore' ) ];

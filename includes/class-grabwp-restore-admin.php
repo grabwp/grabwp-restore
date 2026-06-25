@@ -72,12 +72,17 @@ class GrabWP_Restore_Admin {
 			wp_send_json_error( [ 'message' => 'Unauthorized' ], 403 );
 		}
 
-		$chunk_index  = (int) ( $_POST['chunk_index'] ?? -1 );
-		$total_chunks = (int) ( $_POST['total_chunks'] ?? 0 );
-		$filename     = sanitize_file_name( $_POST['filename'] ?? 'restore.zip' );
+		$chunk_index  = isset( $_POST['chunk_index'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['chunk_index'] ) ) : -1;
+		$total_chunks = isset( $_POST['total_chunks'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['total_chunks'] ) ) : 0;
+		$filename     = isset( $_POST['filename'] ) ? sanitize_file_name( wp_unslash( $_POST['filename'] ) ) : 'restore.zip';
 
 		if ( $chunk_index < 0 || $total_chunks < 1 || empty( $_FILES['chunk'] ) ) {
 			wp_send_json_error( [ 'message' => 'Invalid chunk data.' ] );
+		}
+
+		$chunk_tmp_name = isset( $_FILES['chunk']['tmp_name'] ) ? sanitize_text_field( $_FILES['chunk']['tmp_name'] ) : '';
+		if ( empty( $chunk_tmp_name ) || ! is_uploaded_file( $chunk_tmp_name ) ) {
+			wp_send_json_error( [ 'message' => 'Invalid upload.' ] );
 		}
 
 		$tmp_dir = GRABWP_RESTORE_TMP_DIR . '/upload';
@@ -85,22 +90,24 @@ class GrabWP_Restore_Admin {
 
 		$htaccess = $tmp_dir . '/.htaccess';
 		if ( ! file_exists( $htaccess ) ) {
-			file_put_contents( $htaccess, "Deny from all\n" );
+			file_put_contents( $htaccess, "Deny from all\n" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 		}
 
-		$target     = $tmp_dir . '/' . $filename;
-		$chunk_data = file_get_contents( $_FILES['chunk']['tmp_name'] );
-		if ( false === $chunk_data ) {
-			wp_send_json_error( [ 'message' => 'Cannot read chunk.' ] );
-		}
+		$target = $tmp_dir . '/' . $filename;
 
 		$mode   = ( 0 === $chunk_index ) ? 'wb' : 'ab';
-		$handle = fopen( $target, $mode );
+		$handle = fopen( $target, $mode ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Binary append for chunked uploads; WP_Filesystem has no append mode.
 		if ( ! $handle ) {
 			wp_send_json_error( [ 'message' => 'Cannot write to temp file.' ] );
 		}
-		fwrite( $handle, $chunk_data );
-		fclose( $handle );
+
+		$chunk_data = file_get_contents( $chunk_tmp_name ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reading PHP upload temp file.
+		if ( false === $chunk_data ) {
+			fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+			wp_send_json_error( [ 'message' => 'Cannot read chunk.' ] );
+		}
+		fwrite( $handle, $chunk_data ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Binary append.
+		fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 
 		if ( $chunk_index < $total_chunks - 1 ) {
 			wp_send_json_success( [ 'received' => $chunk_index + 1 ] );
@@ -132,8 +139,10 @@ class GrabWP_Restore_Admin {
 	}
 
 	public function ajax_step() {
-		$job_id    = sanitize_text_field( $_POST['job_id'] ?? '' );
-		$job_token = sanitize_text_field( $_POST['job_token'] ?? '' );
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Authentication uses HMAC job tokens, not nonces; nonces break after DB import replaces the session.
+		$job_id    = isset( $_POST['job_id'] ) ? sanitize_text_field( wp_unslash( $_POST['job_id'] ) ) : '';
+		$job_token = isset( $_POST['job_token'] ) ? sanitize_text_field( wp_unslash( $_POST['job_token'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		$state = $this->load_job( $job_id );
 		if ( ! $state ) {
@@ -177,14 +186,14 @@ class GrabWP_Restore_Admin {
 		wp_mkdir_p( $dir );
 		$htaccess = $dir . '/.htaccess';
 		if ( ! file_exists( $htaccess ) ) {
-			file_put_contents( $htaccess, "Deny from all\n" );
+			file_put_contents( $htaccess, "Deny from all\n" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 		}
 		return $dir;
 	}
 
 	private function save_job( $job_id, $state ) {
 		$file = $this->job_dir() . '/' . $job_id . '.json';
-		file_put_contents( $file, wp_json_encode( $state ), LOCK_EX );
+		file_put_contents( $file, wp_json_encode( $state ), LOCK_EX ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Atomic write with LOCK_EX for job state.
 	}
 
 	private function load_job( $job_id ) {
@@ -196,14 +205,14 @@ class GrabWP_Restore_Admin {
 			return false;
 		}
 		if ( ( time() - filemtime( $file ) ) > self::JOB_TTL ) {
-			unlink( $file );
+			wp_delete_file( $file );
 			return false;
 		}
-		return json_decode( file_get_contents( $file ), true );
+		return json_decode( file_get_contents( $file ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reading local job state file.
 	}
 
 	private function save_active_job( $job_id ) {
-		file_put_contents( $this->job_dir() . '/active.lock', $job_id, LOCK_EX );
+		file_put_contents( $this->job_dir() . '/active.lock', $job_id, LOCK_EX ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 	}
 
 	private function load_active_job() {
@@ -211,13 +220,13 @@ class GrabWP_Restore_Admin {
 		if ( ! file_exists( $file ) ) {
 			return false;
 		}
-		$active_id = trim( file_get_contents( $file ) );
+		$active_id = trim( file_get_contents( $file ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		if ( ! $active_id ) {
 			return false;
 		}
 		$state = $this->load_job( $active_id );
 		if ( ! $state ) {
-			unlink( $file );
+			wp_delete_file( $file );
 			return false;
 		}
 		return $active_id;
@@ -226,7 +235,7 @@ class GrabWP_Restore_Admin {
 	private function clear_active_job() {
 		$file = $this->job_dir() . '/active.lock';
 		if ( file_exists( $file ) ) {
-			unlink( $file );
+			wp_delete_file( $file );
 		}
 	}
 }
