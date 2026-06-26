@@ -129,7 +129,7 @@ class GrabWP_Restore_Step_Controller {
 		}
 
 		require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-file-restorer.php';
-		$dst    = WP_CONTENT_DIR . '/uploads';
+		$dst    = wp_upload_dir()['basedir'];
 		$result = GrabWP_Restore_File_Restorer::rename_to_old( $dst );
 		if ( is_wp_error( $result ) ) {
 			return $result;

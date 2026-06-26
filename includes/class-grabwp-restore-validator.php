@@ -73,30 +73,43 @@ class GrabWP_Restore_Validator {
 			return new WP_Error( 'zip_open', 'Cannot open archive for extraction.' );
 		}
 
+		$real_extract = realpath( $extract_dir );
+
 		for ( $i = 0; $i < $zip->numFiles; $i++ ) {
 			$name = $zip->getNameIndex( $i );
 			if ( false !== strpos( $name, '..' ) || 0 === strpos( $name, '/' ) ) {
 				$zip->close();
 				return new WP_Error( 'path_traversal', 'Archive contains unsafe file paths.' );
 			}
-		}
 
-		$zip->extractTo( $extract_dir );
-		$zip->close();
+			$dest = $real_extract . '/' . $name;
+			if ( '/' === substr( $name, -1 ) ) {
+				wp_mkdir_p( $dest );
+				continue;
+			}
 
-		$real_extract = realpath( $extract_dir );
-		$iterator     = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator( $extract_dir, RecursiveDirectoryIterator::SKIP_DOTS )
-		);
-		foreach ( $iterator as $entry ) {
-			$real = realpath( $entry->getRealPath() );
-			if ( false === $real || 0 !== strpos( $real, $real_extract ) ) {
+			wp_mkdir_p( dirname( $dest ) );
+
+			$content = $zip->getFromIndex( $i );
+			if ( false === $content ) {
+				$zip->close();
+				require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-file-restorer.php';
+				GrabWP_Restore_File_Restorer::remove_dir( $extract_dir );
+				return new WP_Error( 'extract_fail', 'Cannot read archive entry: ' . $name );
+			}
+
+			file_put_contents( $dest, $content ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Writing extracted archive entry to validated temp path.
+
+			$real_dest = realpath( $dest );
+			if ( false === $real_dest || 0 !== strpos( $real_dest, $real_extract ) ) {
+				$zip->close();
 				require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-file-restorer.php';
 				GrabWP_Restore_File_Restorer::remove_dir( $extract_dir );
 				return new WP_Error( 'path_escape', 'Extracted path escapes target directory.' );
 			}
 		}
 
+		$zip->close();
 		return true;
 	}
 

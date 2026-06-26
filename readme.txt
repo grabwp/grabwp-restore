@@ -4,7 +4,7 @@ Tags: restore, backup, migration, import
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -58,5 +58,21 @@ The plugin uses 2MB chunked uploads, so PHP upload limits don't apply.
 
 == Changelog ==
 
+= 1.0.1 =
+* Fix: Sanitize all `$_POST` and `$_FILES` inputs per WordPress coding standards.
+* Fix: Use `phpcs:disable/enable` block for nonce verification bypass on HMAC-authenticated step endpoint.
+* Fix: Move temporary file storage from `wp-content/` to `wp_upload_dir()/grabwp-restore/` per plugin directory guidelines.
+* Fix: Use `wp_upload_dir()['basedir']` instead of hardcoded `WP_CONTENT_DIR . '/uploads'` to support custom and multisite upload paths.
+* Fix: Replace bulk `ZipArchive::extractTo()` with per-file extraction to prevent symlink-based path escapes.
+* Fix: Add `phpcs:ignore` with rationale for false-positive slow DB query warnings in URL replacer.
+
 = 1.0.0 =
-* Initial release
+* Initial release: restore a full WordPress site from a GrabWP Tenancy Pro export ZIP (database, uploads, plugins, and themes).
+* Admin UI at Tools > GrabWP Restore with step-by-step progress feedback (administrator only; requires explicit backup confirmation).
+* Chunked ZIP upload (2 MB per chunk) to bypass PHP upload size limits.
+* Archive validation for GrabWP export structure (`database.sql`, `metadata.json`) with path traversal protection during extraction.
+* Streaming SQL import for large databases, with automatic table prefix rewriting to match the destination site.
+* MySQL collation compatibility for MySQL 5.7 and 8.0.
+* Site URL auto-update and database-wide URL search-and-replace (including serialized and theme-encoded data).
+* Safe file restore: existing plugins, themes, and uploads directories are renamed to .old before replacement.
+* Temporary working files cleaned up on plugin deactivation.

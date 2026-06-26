@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GrabWP Restore
  * Description: Restore a full WordPress site from a GrabWP tenant export ZIP file.
- * Version:     1.0.0
+ * Version:     1.0.1
  * Author:      taicv
  * License:     GPL-2.0-or-later
  * Text Domain: grabwp-restore
@@ -16,10 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'GRABWP_RESTORE_VERSION', '1.0.0' );
+define( 'GRABWP_RESTORE_VERSION', '1.0.1' );
 define( 'GRABWP_RESTORE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'GRABWP_RESTORE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'GRABWP_RESTORE_TMP_DIR', WP_CONTENT_DIR . '/grabwp-restore-tmp' );
+define( 'GRABWP_RESTORE_TMP_DIR', wp_upload_dir()['basedir'] . '/grabwp-restore' );
 
 add_action( 'plugins_loaded', function () {
 	if ( is_admin() ) {
