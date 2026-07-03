@@ -49,7 +49,7 @@ class GrabWP_Restore_Step_Controller {
 
 		$extract_dir = GRABWP_RESTORE_TMP_DIR . '/' . $state['ts'];
 
-		$result = $validator->extract_zip( $state['zip_path'], $extract_dir );
+		$result = $validator->extract_data_files( $state['zip_path'], $extract_dir );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
@@ -98,9 +98,8 @@ class GrabWP_Restore_Step_Controller {
 		$table   = $dst_prefix . 'options';
 		$self    = 'grabwp-restore/grabwp-restore.php';
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Must read freshly imported options table before WP core is aware of it.
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from validated prefix, not user input.
 		$row     = $wpdb->get_row(
-			$wpdb->prepare( "SELECT option_value FROM `{$table}` WHERE option_name = %s", 'active_plugins' ),
+			$wpdb->prepare( 'SELECT option_value FROM %i WHERE option_name = %s', $table, 'active_plugins' ),
 			ARRAY_A
 		);
 		$plugins = $row ? maybe_unserialize( $row['option_value'] ) : [];
@@ -109,22 +108,22 @@ class GrabWP_Restore_Step_Controller {
 		}
 		if ( ! in_array( $self, $plugins, true ) ) {
 			$plugins[] = $self;
-			$wpdb->update(
+			$wpdb->query( $wpdb->prepare(
+				'UPDATE %i SET option_value = %s WHERE option_name = %s',
 				$table,
-				[ 'option_value' => maybe_serialize( $plugins ) ],
-				[ 'option_name' => 'active_plugins' ],
-				[ '%s' ],
-				[ '%s' ]
-			);
+				maybe_serialize( $plugins ),
+				'active_plugins'
+			) );
 		}
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		wp_cache_delete( 'alloptions', 'options' );
 	}
 
 	private function step_restore_uploads( $state ) {
-		$src = $state['extract_dir'] . '/uploads';
-		if ( ! is_dir( $src ) ) {
+		require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-validator.php';
+		$validator = new GrabWP_Restore_Validator();
+
+		if ( ! $validator->has_subdir( $state['zip_path'], 'uploads' ) ) {
 			return [ 'message' => __( 'No uploads directory in archive, skipped.', 'grabwp-restore' ) ];
 		}
 
@@ -134,14 +133,20 @@ class GrabWP_Restore_Step_Controller {
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
-		GrabWP_Restore_File_Restorer::recurse_copy( $src, $dst );
+
+		$result = $validator->extract_subdir( $state['zip_path'], 'uploads', $dst );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
 
 		return [ 'message' => __( 'Uploads restored (old files in uploads.old/).', 'grabwp-restore' ) ];
 	}
 
 	private function step_restore_plugins( $state ) {
-		$src = $state['extract_dir'] . '/plugins';
-		if ( ! is_dir( $src ) ) {
+		require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-validator.php';
+		$validator = new GrabWP_Restore_Validator();
+
+		if ( ! $validator->has_subdir( $state['zip_path'], 'plugins' ) ) {
 			return [ 'message' => __( 'No plugins directory in archive, skipped.', 'grabwp-restore' ) ];
 		}
 
@@ -151,14 +156,20 @@ class GrabWP_Restore_Step_Controller {
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
-		GrabWP_Restore_File_Restorer::recurse_copy( $src, $dst );
+
+		$result = $validator->extract_subdir( $state['zip_path'], 'plugins', $dst );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
 
 		return [ 'message' => __( 'Plugins restored (old plugins in plugins.old/).', 'grabwp-restore' ) ];
 	}
 
 	private function step_restore_themes( $state ) {
-		$src = $state['extract_dir'] . '/themes';
-		if ( ! is_dir( $src ) ) {
+		require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-validator.php';
+		$validator = new GrabWP_Restore_Validator();
+
+		if ( ! $validator->has_subdir( $state['zip_path'], 'themes' ) ) {
 			return [ 'message' => __( 'No themes directory in archive, skipped.', 'grabwp-restore' ) ];
 		}
 
@@ -168,7 +179,11 @@ class GrabWP_Restore_Step_Controller {
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
-		GrabWP_Restore_File_Restorer::recurse_copy( $src, $dst );
+
+		$result = $validator->extract_subdir( $state['zip_path'], 'themes', $dst );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
 
 		return [ 'message' => __( 'Themes restored (old themes in themes.old/).', 'grabwp-restore' ) ];
 	}

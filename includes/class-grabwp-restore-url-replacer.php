@@ -15,8 +15,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // phpcs:disable WordPress.DB.DirectDatabaseQuery -- Must iterate all restored tables for URL replacement.
-// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table/column names from SHOW TABLES/COLUMNS, not user input.
 class GrabWP_Restore_Url_Replacer {
+
+	/**
+	 * Validate that a name is a safe SQL identifier (table or column name).
+	 *
+	 * @param string $name Identifier to validate.
+	 * @return bool
+	 */
+	private function is_valid_identifier( $name ) {
+		return (bool) preg_match( '/^[a-zA-Z0-9_]+$/', $name );
+	}
 
 	/**
 	 * Replace old URL with new URL across all tables matching $prefix.
@@ -41,7 +50,11 @@ class GrabWP_Restore_Url_Replacer {
 		$tables = $wpdb->get_col( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $prefix ) . '%' ) );
 
 		foreach ( $tables as $table ) {
-			$columns   = $wpdb->get_results( "SHOW COLUMNS FROM `{$table}`", ARRAY_A );
+			if ( ! $this->is_valid_identifier( $table ) ) {
+				continue;
+			}
+
+			$columns   = $wpdb->get_results( $wpdb->prepare( 'SHOW COLUMNS FROM %i', $table ), ARRAY_A );
 			$pk        = null;
 			$text_cols = [];
 
@@ -53,13 +66,21 @@ class GrabWP_Restore_Url_Replacer {
 					$text_cols[] = $col['Field'];
 				}
 			}
-			if ( ! $pk || empty( $text_cols ) ) {
+			if ( ! $pk || empty( $text_cols ) || ! $this->is_valid_identifier( $pk ) ) {
 				continue;
 			}
 
 			foreach ( $text_cols as $col_name ) {
+				if ( ! $this->is_valid_identifier( $col_name ) ) {
+					continue;
+				}
+
 				$rows = $wpdb->get_results( $wpdb->prepare(
-					"SELECT `{$pk}`, `{$col_name}` FROM `{$table}` WHERE `{$col_name}` LIKE %s",
+					'SELECT %i, %i FROM %i WHERE %i LIKE %s',
+					$pk,
+					$col_name,
+					$table,
+					$col_name,
 					'%' . $wpdb->esc_like( $old_domain ) . '%'
 				) );
 				if ( empty( $rows ) ) {
@@ -89,20 +110,26 @@ class GrabWP_Restore_Url_Replacer {
 	public function read_siteurl( $prefix ) {
 		global $wpdb;
 		$table = $prefix . 'options';
+		if ( ! $this->is_valid_identifier( $table ) ) {
+			return '';
+		}
 		$exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) );
 		if ( ! $exists ) {
 			return '';
 		}
 		return $wpdb->get_var( $wpdb->prepare(
-			"SELECT option_value FROM `{$table}` WHERE option_name = %s",
+			'SELECT option_value FROM %i WHERE option_name = %s',
+			$table,
 			'siteurl'
 		) ) ?: '';
 	}
 
 	private function replace_muffin_builder( $wpdb, $table, $old_url, $new_url, $old_domain, $new_domain ) {
-		$results = $wpdb->get_results(
-			"SELECT meta_id, post_id, meta_value FROM `{$table}` WHERE meta_key = 'mfn-page-items'"
-		);
+		$results = $wpdb->get_results( $wpdb->prepare(
+			'SELECT meta_id, post_id, meta_value FROM %i WHERE meta_key = %s',
+			$table,
+			'mfn-page-items'
+		) );
 		if ( empty( $results ) ) {
 			return;
 		}

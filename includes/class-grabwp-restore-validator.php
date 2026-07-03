@@ -54,13 +54,17 @@ class GrabWP_Restore_Validator {
 	}
 
 	/**
-	 * Extract ZIP to temp directory with path traversal protection.
+	 * Extract only data files (database.sql, metadata.json) from ZIP to temp directory.
 	 *
-	 * @param string $zip_path    Absolute path to ZIP file.
-	 * @param string $extract_dir Target extraction directory.
+	 * Does NOT extract plugins, themes, or uploads subdirectories here — those
+	 * are extracted directly to their final wp-content destinations during later
+	 * restore steps via extract_subdir().
+	 *
+	 * @param string $zip_path    Absolute path to uploaded ZIP.
+	 * @param string $extract_dir Target extraction directory (inside uploads).
 	 * @return true|WP_Error
 	 */
-	public function extract_zip( $zip_path, $extract_dir ) {
+	public function extract_data_files( $zip_path, $extract_dir ) {
 		if ( ! wp_mkdir_p( $extract_dir ) ) {
 			return new WP_Error( 'mkdir_fail', 'Cannot create temp directory.' );
 		}
@@ -73,16 +77,66 @@ class GrabWP_Restore_Validator {
 			return new WP_Error( 'zip_open', 'Cannot open archive for extraction.' );
 		}
 
-		$real_extract = realpath( $extract_dir );
+		$allowed_files = [ 'database.sql', 'metadata.json' ];
+
+		foreach ( $allowed_files as $name ) {
+			$content = $zip->getFromName( $name );
+			if ( false === $content ) {
+				continue;
+			}
+			file_put_contents( $extract_dir . '/' . $name, $content ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		}
+
+		$zip->close();
+		return true;
+	}
+
+	/**
+	 * Extract a subdirectory from the ZIP directly to a target directory.
+	 *
+	 * Used for plugins/, themes/, and uploads/ — files go straight to their
+	 * final wp-content location, never into the uploads temp directory.
+	 *
+	 * @param string $zip_path   Absolute path to ZIP file.
+	 * @param string $subdir     Subdirectory name inside the ZIP (e.g. 'plugins').
+	 * @param string $target_dir Absolute path to the final destination directory.
+	 * @return true|WP_Error
+	 */
+	public function extract_subdir( $zip_path, $subdir, $target_dir ) {
+		$zip = new ZipArchive();
+		if ( true !== $zip->open( $zip_path ) ) {
+			return new WP_Error( 'zip_open', 'Cannot open archive.' );
+		}
+
+		$prefix     = rtrim( $subdir, '/' ) . '/';
+		$prefix_len = strlen( $prefix );
+
+		if ( ! wp_mkdir_p( $target_dir ) ) {
+			$zip->close();
+			return new WP_Error( 'mkdir_fail', 'Cannot create directory: ' . $target_dir );
+		}
+
+		$real_target = realpath( $target_dir );
 
 		for ( $i = 0; $i < $zip->numFiles; $i++ ) {
 			$name = $zip->getNameIndex( $i );
-			if ( false !== strpos( $name, '..' ) || 0 === strpos( $name, '/' ) ) {
+
+			if ( 0 !== strpos( $name, $prefix ) ) {
+				continue;
+			}
+
+			if ( false !== strpos( $name, '..' ) ) {
 				$zip->close();
 				return new WP_Error( 'path_traversal', 'Archive contains unsafe file paths.' );
 			}
 
-			$dest = $real_extract . '/' . $name;
+			$relative = substr( $name, $prefix_len );
+			if ( '' === $relative ) {
+				continue;
+			}
+
+			$dest = $real_target . '/' . $relative;
+
 			if ( '/' === substr( $name, -1 ) ) {
 				wp_mkdir_p( $dest );
 				continue;
@@ -93,24 +147,45 @@ class GrabWP_Restore_Validator {
 			$content = $zip->getFromIndex( $i );
 			if ( false === $content ) {
 				$zip->close();
-				require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-file-restorer.php';
-				GrabWP_Restore_File_Restorer::remove_dir( $extract_dir );
 				return new WP_Error( 'extract_fail', 'Cannot read archive entry: ' . $name );
 			}
 
-			file_put_contents( $dest, $content ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Writing extracted archive entry to validated temp path.
+			file_put_contents( $dest, $content ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 
 			$real_dest = realpath( $dest );
-			if ( false === $real_dest || 0 !== strpos( $real_dest, $real_extract ) ) {
+			if ( false === $real_dest || 0 !== strpos( $real_dest, $real_target ) ) {
 				$zip->close();
-				require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-file-restorer.php';
-				GrabWP_Restore_File_Restorer::remove_dir( $extract_dir );
 				return new WP_Error( 'path_escape', 'Extracted path escapes target directory.' );
 			}
 		}
 
 		$zip->close();
 		return true;
+	}
+
+	/**
+	 * Check whether a subdirectory exists inside the ZIP archive.
+	 *
+	 * @param string $zip_path Absolute path to ZIP file.
+	 * @param string $subdir   Subdirectory name (e.g. 'plugins').
+	 * @return bool
+	 */
+	public function has_subdir( $zip_path, $subdir ) {
+		$zip = new ZipArchive();
+		if ( true !== $zip->open( $zip_path ) ) {
+			return false;
+		}
+
+		$prefix = rtrim( $subdir, '/' ) . '/';
+		for ( $i = 0; $i < $zip->numFiles; $i++ ) {
+			if ( 0 === strpos( $zip->getNameIndex( $i ), $prefix ) ) {
+				$zip->close();
+				return true;
+			}
+		}
+
+		$zip->close();
+		return false;
 	}
 
 	/**

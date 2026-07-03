@@ -11,7 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // phpcs:disable WordPress.DB.DirectDatabaseQuery -- Entire class executes raw SQL for database restoration.
 // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- SQL statements are read from export dump files, not user input.
-// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table/column names from validated metadata, not user input.
 class GrabWP_Restore_Db_Importer {
 
 	/**
@@ -99,7 +98,7 @@ class GrabWP_Restore_Db_Importer {
 			$wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $prefix ) . '%' )
 		);
 		foreach ( $tables as $table ) {
-			$wpdb->query( "DROP TABLE IF EXISTS `{$table}`" );
+			$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $table ) );
 		}
 	}
 
@@ -207,9 +206,13 @@ class GrabWP_Restore_Db_Importer {
 			}
 			foreach ( $columns as $col_name ) {
 				$wpdb->query( $wpdb->prepare(
-					"UPDATE `{$table}` SET `{$col_name}` = REPLACE(`{$col_name}`, %s, %s) WHERE `{$col_name}` LIKE %s",
+					'UPDATE %i SET %i = REPLACE(%i, %s, %s) WHERE %i LIKE %s',
+					$table,
+					$col_name,
+					$col_name,
 					$src_prefix,
 					$dst_prefix,
+					$col_name,
 					$wpdb->esc_like( $src_prefix ) . '%'
 				) );
 			}
@@ -224,13 +227,12 @@ class GrabWP_Restore_Db_Importer {
 		}
 
 		foreach ( [ 'siteurl', 'home' ] as $option ) {
-			$wpdb->update(
+			$wpdb->query( $wpdb->prepare(
+				'UPDATE %i SET option_value = %s WHERE option_name = %s',
 				$table,
-				[ 'option_value' => $current_url ],
-				[ 'option_name' => $option ],
-				[ '%s' ],
-				[ '%s' ]
-			);
+				$current_url,
+				$option
+			) );
 		}
 	}
 
