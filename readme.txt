@@ -1,10 +1,10 @@
 === GrabWP Restore ===
 Contributors: taicv
 Tags: restore, backup, migration, import
-Requires at least: 5.8
+Requires at least: 6.2
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,13 @@ Before restoring, the plugin renames your existing plugins/, themes/, and upload
 The plugin uses 2MB chunked uploads, so PHP upload limits don't apply.
 
 == Changelog ==
+
+= 1.0.2 =
+* Security: Extract only `database.sql` and `metadata.json` into the uploads temp directory; extract plugins, themes, and uploads directly from the ZIP to their final wp-content destinations (no executable PHP written under uploads).
+* Security: Use `$wpdb` `%i` placeholders for all dynamic table and column identifiers instead of string interpolation.
+* Security: Validate table/column names from `SHOW TABLES` / `SHOW COLUMNS` with an identifier allowlist before use in SQL.
+* Fix: Pass a preserve prefix to `rename_to_old` so the plugin's temp directory under uploads is not renamed away mid-restore.
+* Compatibility: Raise minimum WordPress version to 6.2 (required for `%i` support).
 
 = 1.0.1 =
 * Fix: Sanitize all `$_POST` and `$_FILES` inputs per WordPress coding standards.

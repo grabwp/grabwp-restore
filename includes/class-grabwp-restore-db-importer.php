@@ -131,6 +131,7 @@ class GrabWP_Restore_Db_Importer {
 						}
 					} else {
 						$statement = $this->fix_text_defaults( $statement );
+						// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Full SQL statement from GrabWP export dump; prepare() cannot parameterize dump statements.
 						$wpdb->query( $statement );
 						if ( ! empty( $wpdb->last_error ) ) {
 							$errors[] = $wpdb->last_error . ' [SQL: ' . substr( $statement, 0, 120 ) . ']';
@@ -147,6 +148,7 @@ class GrabWP_Restore_Db_Importer {
 			$statement = trim( $statement );
 			if ( '' !== $statement && strlen( $statement ) <= $max_packet ) {
 				$statement = $this->fix_text_defaults( $statement );
+				// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Full SQL statement from GrabWP export dump; prepare() cannot parameterize dump statements.
 				$wpdb->query( $statement );
 				if ( ! empty( $wpdb->last_error ) ) {
 					$errors[] = $wpdb->last_error;
