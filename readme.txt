@@ -4,7 +4,7 @@ Tags: restore, backup, migration, import
 Requires at least: 6.2
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ GrabWP Restore is a standalone WordPress plugin that restores a full site from a
 
 **Features:**
 
-* 2MB chunked upload (bypasses PHP upload limits)
+* WordPress-validated ZIP upload stored outside the public web root
 * Streaming SQL import (handles large databases)
 * Automatic table prefix rewriting
 * MySQL collation compatibility (MySQL 5.7 / 8.0)
@@ -54,24 +54,45 @@ The admin credentials from the exported site. Your current credentials will no l
 Before restoring, the plugin renames your existing plugins/, themes/, and uploads/ directories to plugins.old/, themes.old/, and uploads.old/. You can delete them after verifying the restore worked correctly.
 
 = What about large files? =
-The plugin uses 2MB chunked uploads, so PHP upload limits don't apply.
+The archive must fit within the server's upload_max_filesize and post_max_size limits. Chunked uploads were removed so uploads can use WordPress core validation without custom file assembly.
+
+= Where are temporary files stored? =
+The uploaded ZIP and restore job state are stored with private permissions in the operating system temporary directory. Restore refuses to start if that directory resolves inside the web root. database.sql is streamed directly from the ZIP and is never extracted to disk.
+
+= Does this support WordPress Multisite? =
+No. Restore is intentionally disabled on Multisite because replacing network-wide plugins, themes, and database tables safely requires a separate network-aware workflow.
+
+= Why is a restore step available after my login session changes? =
+Importing the database can replace the users and sessions tables. Remaining steps therefore use a high-entropy, short-lived job token. Only a hash of that token is stored, failed attempts are limited, and abandoned temporary state expires after six hours.
 
 == Changelog ==
 
+= 1.0.3 =
+* Security: Store uploaded archives and job state in the private system temporary directory — never under web-accessible uploads, and never protected only by .htaccess.
+* Security: Stream database.sql directly from the ZIP without extracting it to disk.
+* Security: Reject uploads that resolve inside the web root; verify ZIP integrity with ZipArchive::CHECKCONS.
+* Security: Replace client-controlled chunk filenames with WordPress core ZIP upload validation.
+* Security: Validate all archive paths and symlink attributes before writing.
+* Security: Skip executable and server-configuration entries under uploads while restoring normal media files.
+* Security: Preflight SQL statements against site-table and operation allowlists before modifying the database.
+* Security: Store only a one-way job-token hash, limit failed token attempts, and purge the archive on abort.
+* Security: Disable restore on Multisite to prevent network-wide destructive operations from subsite context.
+* Compatibility: Use WP_Filesystem for file writes, moves, copies, and recursive deletion.
+* Change: Remove chunked upload support; server upload limits now apply.
+* Fix: Stage plugin self-preservation outside the web root; remove uninstall leftovers including legacy uploads/grabwp-restore.
+
 = 1.0.2 =
-* Security: Extract only `database.sql` and `metadata.json` into the uploads temp directory; extract plugins, themes, and uploads directly from the ZIP to their final wp-content destinations (no executable PHP written under uploads).
+* Security: Stop extracting plugins/themes into the working directory; restore them directly to their final wp-content destinations.
 * Security: Use `$wpdb` `%i` placeholders for all dynamic table and column identifiers instead of string interpolation.
 * Security: Validate table/column names from `SHOW TABLES` / `SHOW COLUMNS` with an identifier allowlist before use in SQL.
-* Fix: Pass a preserve prefix to `rename_to_old` so the plugin's temp directory under uploads is not renamed away mid-restore.
 * Compatibility: Raise minimum WordPress version to 6.2 (required for `%i` support).
 
 = 1.0.1 =
 * Fix: Sanitize all `$_POST` and `$_FILES` inputs per WordPress coding standards.
-* Fix: Use `phpcs:disable/enable` block for nonce verification bypass on HMAC-authenticated step endpoint.
-* Fix: Move temporary file storage from `wp-content/` to `wp_upload_dir()/grabwp-restore/` per plugin directory guidelines.
+* Fix: Authenticate restore steps with an HMAC job token after database replacement invalidates the session nonce.
 * Fix: Use `wp_upload_dir()['basedir']` instead of hardcoded `WP_CONTENT_DIR . '/uploads'` to support custom and multisite upload paths.
 * Fix: Replace bulk `ZipArchive::extractTo()` with per-file extraction to prevent symlink-based path escapes.
-* Fix: Add `phpcs:ignore` with rationale for false-positive slow DB query warnings in URL replacer.
+* Fix: Document indexed URL replacement queries used by the database migration.
 
 = 1.0.0 =
 * Initial release: restore a full WordPress site from a GrabWP Tenancy Pro export ZIP (database, uploads, plugins, and themes).

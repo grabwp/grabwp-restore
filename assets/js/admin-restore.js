@@ -1,18 +1,8 @@
 (function ($) {
 	'use strict';
 
-	var CHUNK_SIZE = 2 * 1024 * 1024; // 2MB
 	var $form, $progress, $bar, $status, $result;
-	var stepLabels = [
-		'',
-		'Validating archive...',
-		'Extracting files...',
-		'Importing database...',
-		'Restoring uploads...',
-		'Restoring plugins...',
-		'Restoring themes...',
-		'Cleaning up...'
-	];
+	var stepLabels = grabwpRestore.i18n.stepLabels;
 
 	$(function () {
 		$form     = $('#grabwp-restore-form');
@@ -33,67 +23,57 @@
 
 			var fileInput = $('#grabwp-restore-file')[0];
 			if (!fileInput.files.length) {
-				showError('Please select a ZIP file.');
+				showError(grabwpRestore.i18n.selectZip);
 				return;
 			}
 
 			$form.hide();
 			$progress.show();
 			$status.text(grabwpRestore.i18n.uploading);
-			uploadChunked(fileInput.files[0]);
+			uploadArchive(fileInput.files[0]);
 		});
 	});
 
-	function uploadChunked(file) {
-		var totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-		var chunkIndex  = 0;
+	function uploadArchive(file) {
+		var fd = new FormData();
+		fd.append('action', 'grabwp_restore_upload');
+		fd.append('nonce', grabwpRestore.uploadNonce);
+		fd.append('archive', file, file.name);
 
-		function sendChunk() {
-			var start = chunkIndex * CHUNK_SIZE;
-			var end   = Math.min(start + CHUNK_SIZE, file.size);
-			var blob  = file.slice(start, end);
-
-			var fd = new FormData();
-			fd.append('action', 'grabwp_restore_upload_chunk');
-			fd.append('nonce', grabwpRestore.uploadNonce);
-			fd.append('chunk', blob, file.name);
-			fd.append('chunk_index', chunkIndex);
-			fd.append('total_chunks', totalChunks);
-			fd.append('filename', file.name);
-
-			var pct = Math.round(((chunkIndex + 1) / totalChunks) * 50);
-			$bar.css('width', pct + '%').text(pct + '%');
-			$status.text('Uploading chunk ' + (chunkIndex + 1) + '/' + totalChunks + '...');
-
-			$.ajax({
-				url: grabwpRestore.ajaxUrl,
-				type: 'POST',
-				data: fd,
-				processData: false,
-				contentType: false,
-				success: function (res) {
-					if (!res.success) {
-						showError(res.data.message || 'Chunk upload failed.');
+		$.ajax({
+			url: grabwpRestore.ajaxUrl,
+			type: 'POST',
+			data: fd,
+			processData: false,
+			contentType: false,
+			xhr: function () {
+				var xhr = $.ajaxSettings.xhr();
+				xhr.upload.addEventListener('progress', function (event) {
+					if (!event.lengthComputable) {
 						return;
 					}
-					chunkIndex++;
-					if (chunkIndex < totalChunks) {
-						sendChunk();
-					} else {
-						runStep(res.data.job_id, res.data.job_token);
-					}
-				},
-				error: function () {
-					showError('Upload request failed. Check your connection.');
+					var pct = Math.round((event.loaded / event.total) * 50);
+					$bar.css('width', pct + '%').text(pct + '%');
+				});
+				return xhr;
+			},
+			success: function (res) {
+				if (!res.success) {
+					showError(res.data.message || grabwpRestore.i18n.uploadFailed);
+					return;
 				}
-			});
-		}
-		sendChunk();
+				runStep(res.data.job_id, res.data.job_token);
+			},
+			error: function () {
+				showError(grabwpRestore.i18n.uploadFailed);
+			}
+		});
 	}
 
 	function runStep(jobId, jobToken) {
 		$.post(grabwpRestore.ajaxUrl, {
 			action: 'grabwp_restore_step',
+			nonce: grabwpRestore.stepNonce,
 			job_id: jobId,
 			job_token: jobToken
 		}, function (res) {
@@ -110,10 +90,10 @@
 					setTimeout(function () { runStep(jobId, jobToken); }, 500);
 				}
 			} else {
-				showError(res.data ? res.data.message : 'Restore step failed.');
+				showError(res.data ? res.data.message : grabwpRestore.i18n.stepFailed);
 			}
 		}).fail(function () {
-			showError('Step request failed. The server may have timed out.');
+			showError(grabwpRestore.i18n.stepRequest);
 		});
 	}
 
@@ -127,9 +107,8 @@
 
 	function showSuccess() {
 		$progress.hide();
-		$result.html(
-			'<div class="grabwp-restore-success">' +
-			grabwpRestore.i18n.complete + '</div>'
+		$result.empty().append(
+			$('<div class="grabwp-restore-success"></div>').text(grabwpRestore.i18n.complete)
 		).show();
 	}
 

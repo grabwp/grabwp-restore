@@ -9,36 +9,41 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Entire class executes raw SQL for database restoration.
-// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- SQL statements are read from export dump files, not user input.
 class GrabWP_Restore_Db_Importer {
 
 	/**
 	 * Import database from SQL file with prefix rewriting, collation downgrade,
 	 * and post-import URL search-and-replace.
 	 *
-	 * @param string $sql_file    Absolute path to database.sql.
+	 * @param string $zip_path    Absolute path to the validated ZIP archive.
 	 * @param string $src_prefix  Source table prefix from metadata.json.
 	 * @param string $dst_prefix  Target table prefix ($table_prefix).
 	 * @param string $current_url Current site URL captured BEFORE import.
 	 * @param array  $meta        Parsed metadata.json from the archive.
 	 * @return true|WP_Error
 	 */
-	public function import( $sql_file, $src_prefix, $dst_prefix, $current_url, $meta = [] ) {
+	public function import( $zip_path, $src_prefix, $dst_prefix, $current_url, $meta = [] ) {
 		global $wpdb;
 
-		if ( ! file_exists( $sql_file ) ) {
-			return new WP_Error( 'no_sql', 'database.sql not found.' );
+		if ( ! file_exists( $zip_path ) ) {
+			return new WP_Error( 'no_archive', __( 'Restore archive not found.', 'grabwp-restore' ) );
 		}
 
-		@set_time_limit( 300 ); // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- Large SQL imports need extended execution time.
+		$validation = $this->validate_sql_archive( $wpdb, $zip_path, $src_prefix, $dst_prefix );
+		if ( is_wp_error( $validation ) ) {
+			return $validation;
+		}
 
 		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 0' );
 		$wpdb->query( "SET SESSION sql_mode = ''" );
 
 		$this->drop_existing_tables( $wpdb, $dst_prefix );
 
-		$errors = $this->execute_streaming( $wpdb, $sql_file, $src_prefix, $dst_prefix );
+		$errors = $this->execute_streaming( $wpdb, $zip_path, $src_prefix, $dst_prefix );
+		if ( is_wp_error( $errors ) ) {
+			$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 1' );
+			return $errors;
+		}
 
 		$this->rewrite_prefix_in_data( $wpdb, $src_prefix, $dst_prefix );
 
@@ -49,7 +54,6 @@ class GrabWP_Restore_Db_Importer {
 		$this->update_site_url( $wpdb, $dst_prefix, $current_url );
 
 		if ( ! empty( $old_url ) && $old_url !== $current_url ) {
-			@set_time_limit( 300 ); // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- URL replacement on large databases needs extended execution time.
 			$url_replacer->replace( $dst_prefix, $old_url, $current_url );
 		}
 
@@ -57,8 +61,14 @@ class GrabWP_Restore_Db_Importer {
 
 		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 1' );
 
-		if ( ! empty( $errors ) && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			error_log( '[GrabWP Restore] SQL errors: ' . implode( '; ', array_slice( $errors, 0, 10 ) ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Diagnostic logging gated behind WP_DEBUG.
+		if ( ! empty( $errors ) ) {
+			return new WP_Error(
+				'sql_import_failed',
+				sprintf(
+					__( 'Database import failed: %s', 'grabwp-restore' ),
+					implode( '; ', array_slice( $errors, 0, 3 ) )
+				)
+			);
 		}
 
 		return true;
@@ -88,7 +98,6 @@ class GrabWP_Restore_Db_Importer {
 		$new_base     = $upload_dir['baseurl'];
 
 		if ( ! empty( $new_base ) && $old_cdn_base !== $new_base ) {
-			@set_time_limit( 300 ); // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
 			$replacer->replace( $dst_prefix, $old_cdn_base, $new_base );
 		}
 	}
@@ -102,62 +111,115 @@ class GrabWP_Restore_Db_Importer {
 		}
 	}
 
-	private function execute_streaming( $wpdb, $sql_file, $src_prefix, $dst_prefix ) {
-		$handle = fopen( $sql_file, 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Streaming line-by-line reads; WP_Filesystem has no line iterator.
-		if ( ! $handle ) {
-			return [ 'Could not open SQL file: ' . $sql_file ];
-		}
-
-		$errors            = [];
-		$current_statement = '';
-		$max_packet        = $this->get_max_allowed_packet( $wpdb );
-
-		while ( ( $line = fgets( $handle ) ) !== false ) {
-			$line = rtrim( $line, "\r\n" );
-			if ( '' === $line || 0 === strpos( ltrim( $line ), '--' ) ) {
-				continue;
-			}
-			$current_statement .= $line . "\n";
-
-			if ( ';' === substr( rtrim( $line ), -1 ) ) {
-				$statement = $this->replace_prefixes( $current_statement, $src_prefix, $dst_prefix );
-				$statement = $this->replace_collations( $wpdb, $statement );
-				$statement = trim( $statement );
-
-				if ( '' !== $statement ) {
-					if ( strlen( $statement ) > $max_packet ) {
-						if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-							error_log( '[GrabWP Restore] Skipping oversized statement (' . strlen( $statement ) . ' bytes)' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-						}
-					} else {
-						$statement = $this->fix_text_defaults( $statement );
-						// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Full SQL statement from GrabWP export dump; prepare() cannot parameterize dump statements.
-						$wpdb->query( $statement );
-						if ( ! empty( $wpdb->last_error ) ) {
-							$errors[] = $wpdb->last_error . ' [SQL: ' . substr( $statement, 0, 120 ) . ']';
-						}
-					}
+	private function validate_sql_archive( $wpdb, $zip_path, $src_prefix, $dst_prefix ) {
+		$max_packet = $this->get_max_allowed_packet( $wpdb );
+		return $this->walk_sql_statements(
+			$zip_path,
+			function ( $statement ) use ( $wpdb, $src_prefix, $dst_prefix, $max_packet ) {
+				$validation = $this->validate_sql_statement( $statement, $src_prefix );
+				if ( is_wp_error( $validation ) || $this->should_skip_statement( $statement ) ) {
+					return $validation;
 				}
-				$current_statement = '';
+				$prepared_sql = $this->replace_prefixes( $statement, $src_prefix, $dst_prefix );
+				$prepared_sql = $this->replace_collations( $wpdb, $prepared_sql );
+				$prepared_sql = $this->fix_text_defaults( trim( $prepared_sql ) );
+				if ( strlen( $prepared_sql ) > $max_packet ) {
+					return new WP_Error( 'oversized_sql', __( 'Archive contains a database statement larger than the server limit.', 'grabwp-restore' ) );
+				}
+				return true;
 			}
-		}
+		);
+	}
 
-		if ( '' !== trim( $current_statement ) ) {
-			$statement = $this->replace_prefixes( $current_statement, $src_prefix, $dst_prefix );
-			$statement = $this->replace_collations( $wpdb, $statement );
-			$statement = trim( $statement );
-			if ( '' !== $statement && strlen( $statement ) <= $max_packet ) {
-				$statement = $this->fix_text_defaults( $statement );
-				// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Full SQL statement from GrabWP export dump; prepare() cannot parameterize dump statements.
-				$wpdb->query( $statement );
+	private function execute_streaming( $wpdb, $zip_path, $src_prefix, $dst_prefix ) {
+		$errors     = [];
+		$max_packet = $this->get_max_allowed_packet( $wpdb );
+		$result     = $this->walk_sql_statements(
+			$zip_path,
+			function ( $statement ) use ( $wpdb, $src_prefix, $dst_prefix, $max_packet, &$errors ) {
+				if ( $this->should_skip_statement( $statement ) ) {
+					return true;
+				}
+				$prepared_sql = $this->replace_prefixes( $statement, $src_prefix, $dst_prefix );
+				$prepared_sql = $this->replace_collations( $wpdb, $prepared_sql );
+				$prepared_sql = $this->fix_text_defaults( trim( $prepared_sql ) );
+				if ( strlen( $prepared_sql ) > $max_packet ) {
+					return new WP_Error( 'oversized_sql', __( 'Archive contains a database statement larger than the server limit.', 'grabwp-restore' ) );
+				}
+				$wpdb->query( $prepared_sql );
 				if ( ! empty( $wpdb->last_error ) ) {
 					$errors[] = $wpdb->last_error;
 				}
+				return true;
 			}
+		);
+		return is_wp_error( $result ) ? $result : $errors;
+	}
+
+	private function walk_sql_statements( $zip_path, $callback ) {
+		$zip = new ZipArchive();
+		if ( true !== $zip->open( $zip_path ) ) {
+			return new WP_Error( 'zip_open', __( 'Cannot open restore archive.', 'grabwp-restore' ) );
+		}
+		$stream = $zip->getStream( 'database.sql' );
+		if ( false === $stream ) {
+			$zip->close();
+			return new WP_Error( 'missing_sql', __( 'Archive database.sql could not be read.', 'grabwp-restore' ) );
 		}
 
-		fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
-		return $errors;
+		$current_statement = '';
+		while ( false !== ( $line = fgets( $stream ) ) ) {
+			$line    = rtrim( $line, "\r\n" );
+			$trimmed = ltrim( $line );
+			if ( '' === $trimmed || 0 === strpos( $trimmed, '--' ) || 0 === strpos( $trimmed, '#' ) ) {
+				continue;
+			}
+			$current_statement .= $line . "\n";
+			if ( ';' !== substr( rtrim( $line ), -1 ) ) {
+				continue;
+			}
+			$result = call_user_func( $callback, trim( $current_statement ) );
+			if ( is_wp_error( $result ) ) {
+				unset( $stream );
+				$zip->close();
+				return $result;
+			}
+			$current_statement = '';
+		}
+
+		if ( '' !== trim( $current_statement ) ) {
+			$result = call_user_func( $callback, trim( $current_statement ) );
+			if ( is_wp_error( $result ) ) {
+				unset( $stream );
+				$zip->close();
+				return $result;
+			}
+		}
+		unset( $stream );
+		$zip->close();
+		return true;
+	}
+
+	private function validate_sql_statement( $statement, $src_prefix ) {
+		if ( $this->should_skip_statement( $statement ) ) {
+			return true;
+		}
+		if ( preg_match( '/\b(?:INTO\s+(?:OUTFILE|DUMPFILE)|LOAD\s+DATA|LOAD_FILE|CREATE\s+(?:FUNCTION|PROCEDURE|TRIGGER|EVENT))\b/i', $statement ) ) {
+			return new WP_Error( 'unsafe_sql', __( 'Archive contains a prohibited database operation.', 'grabwp-restore' ) );
+		}
+		$pattern = '/^(?:CREATE\s+TABLE(?:\s+IF\s+NOT\s+EXISTS)?|DROP\s+TABLE(?:\s+IF\s+EXISTS)?|INSERT(?:\s+IGNORE)?\s+INTO|REPLACE\s+INTO|ALTER\s+TABLE)\s+`?([a-zA-Z0-9_]+)`?/i';
+		if ( ! preg_match( $pattern, ltrim( $statement ), $matches ) || 0 !== strpos( $matches[1], $src_prefix ) ) {
+			return new WP_Error( 'unsupported_sql', __( 'Archive contains SQL outside the exported site tables.', 'grabwp-restore' ) );
+		}
+		if ( 0 === stripos( ltrim( $statement ), 'ALTER TABLE' ) && preg_match( '/\bRENAME\b/i', $statement ) ) {
+			return new WP_Error( 'unsafe_alter', __( 'Archive attempts to rename a database table.', 'grabwp-restore' ) );
+		}
+		return true;
+	}
+
+	private function should_skip_statement( $statement ) {
+		$statement = ltrim( $statement );
+		return (bool) preg_match( '/^(?:\/\*|SET\b|LOCK\s+TABLES\b|UNLOCK\s+TABLES\b|START\s+TRANSACTION\b|COMMIT\b)/i', $statement );
 	}
 
 	private function replace_prefixes( $sql, $src_prefix, $dst_prefix ) {

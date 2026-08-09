@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Must iterate all restored tables for URL replacement.
 class GrabWP_Restore_Url_Replacer {
 
 	/**
@@ -139,13 +138,14 @@ class GrabWP_Restore_Url_Replacer {
 		foreach ( $results as $row ) {
 			try {
 				$raw        = $row->meta_value;
-				$data       = @unserialize( $raw ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+				$data       = is_serialized( $raw ) ? unserialize( $raw, [ 'allowed_classes' => false ] ) : false;
 				$was_base64 = false;
 
 				if ( false === $data ) {
-					$decoded = base64_decode( $raw, true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-					if ( false !== $decoded ) {
-						$data       = @unserialize( $decoded ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+					// BeTheme stores Muffin Builder arrays as base64-encoded PHP serialization.
+					$decoded = base64_decode( $raw, true );
+					if ( false !== $decoded && is_serialized( $decoded ) ) {
+						$data       = unserialize( $decoded, [ 'allowed_classes' => false ] );
 						$was_base64 = ( false !== $data );
 					}
 				}
@@ -158,18 +158,13 @@ class GrabWP_Restore_Url_Replacer {
 					$data = $this->recursive_replace( $data, $old_url, $new_url );
 				}
 
-				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize, WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-				$new_meta = $was_base64 ? base64_encode( serialize( $data ) ) : serialize( $data );
+				$new_meta = $was_base64 ? base64_encode( maybe_serialize( $data ) ) : maybe_serialize( $data );
 				if ( $new_meta !== $raw ) {
-					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- SET clause, not WHERE; keyed on meta_id PK.
 					$wpdb->update( $table, [ 'meta_value' => $new_meta ], [ 'meta_id' => $row->meta_id ] );
-					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Delete uses indexed (post_id, meta_key) pair.
 					$wpdb->delete( $table, [ 'post_id' => $row->post_id, 'meta_key' => 'mfn-page-object' ] );
 				}
 			} catch ( \Error $e ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-					error_log( '[GrabWP Restore] Muffin Builder replace error: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-				}
+				do_action( 'grabwp_restore_url_replace_error', $e );
 			}
 		}
 	}
@@ -182,13 +177,13 @@ class GrabWP_Restore_Url_Replacer {
 		$skip_url_replace = ( false !== strpos( $new_domain, $old_domain ) );
 
 		if ( is_serialized( $value ) ) {
-			$data = @unserialize( $value ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+			$data = unserialize( $value, [ 'allowed_classes' => false ] );
 			if ( false !== $data ) {
 				$data = $this->recursive_replace( $data, $old_domain, $new_domain );
 				if ( ! $skip_url_replace ) {
 					$data = $this->recursive_replace( $data, $old_url, $new_url );
 				}
-				return serialize( $data ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+				return maybe_serialize( $data );
 			}
 		}
 

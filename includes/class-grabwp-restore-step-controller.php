@@ -28,12 +28,17 @@ class GrabWP_Restore_Step_Controller {
 			case 7:
 				return $this->step_cleanup( $state );
 		}
-		return new WP_Error( 'invalid_step', 'Invalid step.' );
+		return new WP_Error( 'invalid_step', __( 'Invalid restore step.', 'grabwp-restore' ) );
 	}
 
 	private function step_validate( $state ) {
 		require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-validator.php';
 		$validator = new GrabWP_Restore_Validator();
+
+		$result = $validator->validate_environment();
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
 
 		$result = $validator->validate_zip( $state['zip_path'] );
 		if ( is_wp_error( $result ) ) {
@@ -47,22 +52,14 @@ class GrabWP_Restore_Step_Controller {
 		require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-validator.php';
 		$validator = new GrabWP_Restore_Validator();
 
-		$extract_dir = GRABWP_RESTORE_TMP_DIR . '/' . $state['ts'];
-
-		$result = $validator->extract_data_files( $state['zip_path'], $extract_dir );
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
-
-		$meta = $validator->parse_metadata( $extract_dir );
+		$meta = $validator->parse_metadata( $state['zip_path'] );
 		if ( is_wp_error( $meta ) ) {
 			return $meta;
 		}
 
 		return [
-			'message' => __( 'Archive extracted and verified.', 'grabwp-restore' ),
+			'message' => __( 'Archive metadata verified.', 'grabwp-restore' ),
 			'data'    => [
-				'extract_dir' => $extract_dir,
 				'meta'        => $meta,
 				'src_prefix'  => $validator->get_source_prefix( $meta ),
 			],
@@ -73,13 +70,13 @@ class GrabWP_Restore_Step_Controller {
 		require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-db-importer.php';
 
 		$importer    = new GrabWP_Restore_Db_Importer();
-		$sql_file    = $state['extract_dir'] . '/database.sql';
+		$zip_path    = $state['zip_path'];
 		$src_prefix  = $state['src_prefix'];
 		$dst_prefix  = $GLOBALS['table_prefix'];
 		$current_url = $state['current_url'];
 		$meta        = $state['meta'] ?? [];
 
-		$result = $importer->import( $sql_file, $src_prefix, $dst_prefix, $current_url, $meta );
+		$result = $importer->import( $zip_path, $src_prefix, $dst_prefix, $current_url, $meta );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
@@ -97,7 +94,6 @@ class GrabWP_Restore_Step_Controller {
 
 		$table   = $dst_prefix . 'options';
 		$self    = 'grabwp-restore/grabwp-restore.php';
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Must read freshly imported options table before WP core is aware of it.
 		$row     = $wpdb->get_row(
 			$wpdb->prepare( 'SELECT option_value FROM %i WHERE option_name = %s', $table, 'active_plugins' ),
 			ARRAY_A
@@ -115,7 +111,6 @@ class GrabWP_Restore_Step_Controller {
 				'active_plugins'
 			) );
 		}
-		// phpcs:enable WordPress.DB.DirectDatabaseQuery
 		wp_cache_delete( 'alloptions', 'options' );
 	}
 
@@ -129,7 +124,7 @@ class GrabWP_Restore_Step_Controller {
 
 		require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-file-restorer.php';
 		$dst    = wp_upload_dir()['basedir'];
-		$result = GrabWP_Restore_File_Restorer::rename_to_old( $dst, 'grabwp-restore' );
+		$result = GrabWP_Restore_File_Restorer::rename_to_old( $dst );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
@@ -191,25 +186,11 @@ class GrabWP_Restore_Step_Controller {
 	private function step_cleanup( $state ) {
 		require_once GRABWP_RESTORE_PLUGIN_DIR . 'includes/class-grabwp-restore-file-restorer.php';
 
-		if ( ! empty( $state['extract_dir'] ) && is_dir( $state['extract_dir'] ) ) {
-			GrabWP_Restore_File_Restorer::remove_dir( $state['extract_dir'] );
-		}
-
 		if ( ! empty( $state['zip_path'] ) && file_exists( $state['zip_path'] ) ) {
 			wp_delete_file( $state['zip_path'] );
 		}
 
-		$upload_tmp = GRABWP_RESTORE_TMP_DIR . '/upload';
-		if ( is_dir( $upload_tmp ) ) {
-			GrabWP_Restore_File_Restorer::remove_dir( $upload_tmp );
-		}
-
 		flush_rewrite_rules();
-
-		$lock_file = GRABWP_RESTORE_TMP_DIR . '/jobs/active.lock';
-		if ( file_exists( $lock_file ) ) {
-			wp_delete_file( $lock_file );
-		}
 
 		return [ 'message' => __( 'Restore complete.', 'grabwp-restore' ) ];
 	}

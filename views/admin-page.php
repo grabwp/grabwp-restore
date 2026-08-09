@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div class="grabwp-restore-limits">
 		<strong><?php esc_html_e( 'Note:', 'grabwp-restore' ); ?></strong>
-		<?php esc_html_e( 'Files are uploaded in 2MB chunks — no PHP upload limit restrictions.', 'grabwp-restore' ); ?>
+		<?php esc_html_e( 'The ZIP file must fit within your server upload_max_filesize and post_max_size limits.', 'grabwp-restore' ); ?>
 	</div>
 
 	<form id="grabwp-restore-form" enctype="multipart/form-data">
