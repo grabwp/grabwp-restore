@@ -1,0 +1,381 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: GrabWP Restore 1.0.3\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/grabwp-restore\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French (France)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-11T19:14:52+00:00\n"
+"PO-Revision-Date: 2026-10-11 20:11+0000\n"
+"Language: fr_FR\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: grabwp-restore\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. Plugin Name of the plugin
+#: grabwp-restore.php
+#: includes/class-grabwp-restore-admin.php:32
+#: includes/class-grabwp-restore-admin.php:33
+#: views/admin-page.php:13
+msgid "GrabWP Restore"
+msgstr "GrabWP Restore"
+
+#. Description of the plugin
+#: grabwp-restore.php
+msgid "Restore a full WordPress site from a GrabWP tenant export ZIP file."
+msgstr "Restaurer un site WordPress complet à partir d'un fichier ZIP d'export de locataire GrabWP."
+
+#. Author of the plugin
+#: grabwp-restore.php
+msgid "taicv"
+msgstr "taicv"
+
+#: includes/class-grabwp-restore-admin.php:62
+msgid "This will permanently replace your entire site. Continue?"
+msgstr "Ceci remplacera définitivement l'intégralité de votre site. Continuer ?"
+
+#: includes/class-grabwp-restore-admin.php:63
+msgid "Uploading..."
+msgstr "Téléversement..."
+
+#: includes/class-grabwp-restore-admin.php:64
+msgid "Restoring..."
+msgstr "Restauration en cours..."
+
+#: includes/class-grabwp-restore-admin.php:65
+msgid "Restore complete! Log in with the exported site credentials. You can safely remove the .old directories in wp-content/."
+msgstr "Restauration terminée ! Connectez-vous avec les identifiants du site exporté. Vous pouvez supprimer en toute sécurité les répertoires .old dans wp-content/."
+
+#: includes/class-grabwp-restore-admin.php:66
+msgid "Error:"
+msgstr "Erreur :"
+
+#: includes/class-grabwp-restore-admin.php:67
+msgid "Please select a ZIP file."
+msgstr "Veuillez sélectionner un fichier ZIP."
+
+#: includes/class-grabwp-restore-admin.php:68
+msgid "Upload failed. Check the PHP upload limit and your connection."
+msgstr "Échec du téléversement. Vérifiez la limite de téléversement de PHP et votre connexion."
+
+#: includes/class-grabwp-restore-admin.php:69
+msgid "Restore step failed."
+msgstr "L'étape de restauration a échoué."
+
+#: includes/class-grabwp-restore-admin.php:70
+msgid "Step request failed. The server may have timed out."
+msgstr "La requête de l'étape a échoué. Le délai d'attente du serveur est peut-être dépassé."
+
+#: includes/class-grabwp-restore-admin.php:73
+msgid "Validating archive..."
+msgstr "Validation de l'archive..."
+
+#: includes/class-grabwp-restore-admin.php:74
+msgid "Reading archive metadata..."
+msgstr "Lecture des métadonnées de l'archive..."
+
+#: includes/class-grabwp-restore-admin.php:75
+msgid "Importing database..."
+msgstr "Importation de la base de données..."
+
+#: includes/class-grabwp-restore-admin.php:76
+msgid "Restoring uploads..."
+msgstr "Restauration des fichiers téléversés..."
+
+#: includes/class-grabwp-restore-admin.php:77
+msgid "Restoring plugins..."
+msgstr "Restauration des extensions..."
+
+#: includes/class-grabwp-restore-admin.php:78
+msgid "Restoring themes..."
+msgstr "Restauration des thèmes..."
+
+#: includes/class-grabwp-restore-admin.php:79
+msgid "Cleaning up..."
+msgstr "Nettoyage..."
+
+#: includes/class-grabwp-restore-admin.php:92
+msgid "Unauthorized."
+msgstr "Non autorisé."
+
+#: includes/class-grabwp-restore-admin.php:99
+msgid "A restore is already in progress."
+msgstr "Une restauration est déjà en cours."
+
+#: includes/class-grabwp-restore-admin.php:102
+#: includes/class-grabwp-restore-admin.php:112
+msgid "Invalid archive upload."
+msgstr "Téléversement d'archive non valide."
+
+#: includes/class-grabwp-restore-admin.php:117
+msgid "Only ZIP archives are accepted."
+msgstr "Seules les archives ZIP sont acceptées."
+
+#: includes/class-grabwp-restore-admin.php:138
+msgid "Could not create restore job."
+msgstr "Impossible de créer la tâche de restauration."
+
+#: includes/class-grabwp-restore-admin.php:151
+msgid "WordPress could not initialize direct filesystem access."
+msgstr "WordPress n'a pas pu initialiser l'accès direct au système de fichiers."
+
+#: includes/class-grabwp-restore-admin.php:188
+msgid "Could not secure the uploaded archive."
+msgstr "Impossible de sécuriser l'archive téléversée."
+
+#: includes/class-grabwp-restore-admin.php:193
+msgid "Could not resolve the uploaded archive path."
+msgstr "Impossible de résoudre le chemin de l'archive téléversée."
+
+#: includes/class-grabwp-restore-admin.php:203
+msgid "Uploaded archives must not be stored inside the web root."
+msgstr "Les archives téléversées ne doivent pas être stockées à la racine du site web."
+
+#: includes/class-grabwp-restore-admin.php:208
+#: includes/class-grabwp-restore-validator.php:44
+msgid "PHP ZipArchive extension is required."
+msgstr "L'extension PHP ZipArchive est requise."
+
+#: includes/class-grabwp-restore-admin.php:213
+#: includes/class-grabwp-restore-validator.php:49
+msgid "Invalid or corrupted ZIP archive."
+msgstr "Archive ZIP non valide ou corrompue."
+
+#: includes/class-grabwp-restore-admin.php:239
+msgid "Multisite restore is not supported."
+msgstr "La restauration d'un multisite n'est pas prise en charge."
+
+#: includes/class-grabwp-restore-admin.php:250
+msgid "Job not found or expired."
+msgstr "Tâche introuvable ou expirée."
+
+#: includes/class-grabwp-restore-admin.php:261
+msgid "Invalid job token."
+msgstr "Jeton de tâche non valide."
+
+#: includes/class-grabwp-restore-admin.php:266
+msgid "Restore is already complete."
+msgstr "La restauration est déjà terminée."
+
+#: includes/class-grabwp-restore-admin.php:416
+#: includes/class-grabwp-restore-admin.php:432
+msgid "A private system temporary directory is required."
+msgstr "Un répertoire temporaire système privé est requis."
+
+#: includes/class-grabwp-restore-admin.php:422
+msgid "Could not create a private temporary directory."
+msgstr "Impossible de créer un répertoire temporaire privé."
+
+#: includes/class-grabwp-restore-admin.php:426
+msgid "Could not resolve the private temporary directory."
+msgstr "Impossible de résoudre le répertoire temporaire privé."
+
+#: includes/class-grabwp-restore-db-importer.php:29
+msgid "Restore archive not found."
+msgstr "Archive de restauration introuvable."
+
+#: includes/class-grabwp-restore-db-importer.php:68
+#, php-format
+msgid "Database import failed: %s"
+msgstr "L'importation de la base de données a échoué : %s"
+
+#: includes/class-grabwp-restore-db-importer.php:127
+#: includes/class-grabwp-restore-db-importer.php:147
+msgid "Archive contains a database statement larger than the server limit."
+msgstr "L'archive contient une requête de base de données plus grande que la limite du serveur."
+
+#: includes/class-grabwp-restore-db-importer.php:162
+msgid "Cannot open restore archive."
+msgstr "Impossible d'ouvrir l'archive de restauration."
+
+#: includes/class-grabwp-restore-db-importer.php:167
+msgid "Archive database.sql could not be read."
+msgstr "Le fichier database.sql de l'archive n'a pas pu être lu."
+
+#: includes/class-grabwp-restore-db-importer.php:208
+msgid "Archive contains a prohibited database operation."
+msgstr "L'archive contient une opération de base de données interdite."
+
+#: includes/class-grabwp-restore-db-importer.php:212
+msgid "Archive contains SQL outside the exported site tables."
+msgstr "L'archive contient du code SQL en dehors des tables du site exporté."
+
+#: includes/class-grabwp-restore-db-importer.php:215
+msgid "Archive attempts to rename a database table."
+msgstr "L'archive tente de renommer une table de base de données."
+
+#: includes/class-grabwp-restore-file-restorer.php:45
+msgid "Could not stage the plugin directory outside the web root."
+msgstr "Impossible de préparer le répertoire de l'extension en dehors de la racine web."
+
+#: includes/class-grabwp-restore-file-restorer.php:53
+#: includes/class-grabwp-restore-file-restorer.php:63
+msgid "Could not preserve the existing directory."
+msgstr "Impossible de conserver le répertoire existant."
+
+#: includes/class-grabwp-restore-file-restorer.php:177
+#: includes/class-grabwp-restore-validator.php:227
+msgid "WordPress could not initialize the filesystem."
+msgstr "WordPress n'a pas pu initialiser le système de fichiers."
+
+#: includes/class-grabwp-restore-file-restorer.php:181
+#: includes/class-grabwp-restore-validator.php:231
+msgid "Restore requires direct filesystem access."
+msgstr "La restauration nécessite un accès direct au système de fichiers."
+
+#: includes/class-grabwp-restore-step-controller.php:31
+msgid "Invalid restore step."
+msgstr "Étape de restauration non valide."
+
+#: includes/class-grabwp-restore-step-controller.php:48
+msgid "Archive validated."
+msgstr "Archive validée."
+
+#: includes/class-grabwp-restore-step-controller.php:61
+msgid "Archive metadata verified."
+msgstr "Métadonnées de l'archive vérifiées."
+
+#: includes/class-grabwp-restore-step-controller.php:87
+msgid "Database imported, prefixes rewritten, and URLs updated."
+msgstr "Base de données importée, préfixes réécrits et URL mises à jour."
+
+#: includes/class-grabwp-restore-step-controller.php:122
+msgid "No uploads directory in archive, skipped."
+msgstr "Aucun répertoire de fichiers téléversés dans l'archive, ignoré."
+
+#: includes/class-grabwp-restore-step-controller.php:137
+msgid "Uploads restored (old files in uploads.old/)."
+msgstr "Fichiers téléversés restaurés (anciens fichiers dans uploads.old/)."
+
+#: includes/class-grabwp-restore-step-controller.php:145
+msgid "No plugins directory in archive, skipped."
+msgstr "Aucun répertoire d'extensions dans l'archive, ignoré."
+
+#: includes/class-grabwp-restore-step-controller.php:160
+msgid "Plugins restored (old plugins in plugins.old/)."
+msgstr "Extensions restaurées (anciennes extensions dans plugins.old/)."
+
+#: includes/class-grabwp-restore-step-controller.php:168
+msgid "No themes directory in archive, skipped."
+msgstr "Aucun répertoire de thèmes dans l'archive, ignoré."
+
+#: includes/class-grabwp-restore-step-controller.php:183
+msgid "Themes restored (old themes in themes.old/)."
+msgstr "Thèmes restaurés (anciens thèmes dans themes.old/)."
+
+#: includes/class-grabwp-restore-step-controller.php:195
+msgid "Restore complete."
+msgstr "Restauration terminée."
+
+#: includes/class-grabwp-restore-validator.php:27
+msgid "A wp-content destination is not writable."
+msgstr "Une destination wp-content n'est pas accessible en écriture."
+
+#: includes/class-grabwp-restore-validator.php:41
+msgid "Archive file not found."
+msgstr "Fichier d'archive introuvable."
+
+#: includes/class-grabwp-restore-validator.php:59
+msgid "Archive contains too many files."
+msgstr "L'archive contient trop de fichiers."
+
+#: includes/class-grabwp-restore-validator.php:65
+#: includes/class-grabwp-restore-validator.php:149
+msgid "Archive contains an unsafe file path."
+msgstr "L'archive contient un chemin de fichier non sécurisé."
+
+#: includes/class-grabwp-restore-validator.php:70
+msgid "Archive contains an unreadable entry."
+msgstr "L'archive contient une entrée illisible."
+
+#: includes/class-grabwp-restore-validator.php:75
+msgid "Archive expands beyond the allowed size."
+msgstr "L'archive se décompresse au-delà de la taille autorisée."
+
+#: includes/class-grabwp-restore-validator.php:79
+msgid "Archive contains an unsafe compression ratio."
+msgstr "L'archive contient un taux de compression non sécurisé."
+
+#: includes/class-grabwp-restore-validator.php:91
+msgid "Archive is missing database.sql."
+msgstr "L'archive ne contient pas database.sql."
+
+#: includes/class-grabwp-restore-validator.php:94
+msgid "Archive is missing metadata.json."
+msgstr "L'archive ne contient pas metadata.json."
+
+#: includes/class-grabwp-restore-validator.php:118
+#: includes/class-grabwp-restore-validator.php:270
+msgid "Cannot open archive."
+msgstr "Impossible d'ouvrir l'archive."
+
+#: includes/class-grabwp-restore-validator.php:126
+msgid "Cannot create the restore destination directory."
+msgstr "Impossible de créer le répertoire de destination de restauration."
+
+#: includes/class-grabwp-restore-validator.php:132
+msgid "Restore destination is not a safe directory."
+msgstr "La destination de restauration n'est pas un répertoire sécurisé."
+
+#: includes/class-grabwp-restore-validator.php:161
+#: includes/class-grabwp-restore-validator.php:169
+msgid "Cannot create an archive directory."
+msgstr "Impossible de créer un répertoire d'archive."
+
+#: includes/class-grabwp-restore-validator.php:174
+msgid "Archive path escapes the restore destination."
+msgstr "Le chemin de l'archive s'échappe de la destination de restauration."
+
+#: includes/class-grabwp-restore-validator.php:180
+msgid "Cannot read an archive entry."
+msgstr "Impossible de lire une entrée de l'archive."
+
+#: includes/class-grabwp-restore-validator.php:185
+msgid "Cannot write an archive entry."
+msgstr "Impossible d'écrire une entrée de l'archive."
+
+#: includes/class-grabwp-restore-validator.php:275
+msgid "metadata.json is missing or too large."
+msgstr "metadata.json est manquant ou trop volumineux."
+
+#: includes/class-grabwp-restore-validator.php:280
+msgid "metadata.json could not be read."
+msgstr "metadata.json n'a pas pu être lu."
+
+#: includes/class-grabwp-restore-validator.php:284
+msgid "metadata.json is invalid JSON."
+msgstr "metadata.json est un fichier JSON non valide."
+
+#: includes/class-grabwp-restore-validator.php:288
+msgid "metadata.json is missing tenant_prefix."
+msgstr "tenant_prefix est manquant dans metadata.json."
+
+#: includes/class-grabwp-restore-validator.php:292
+msgid "metadata.json contains an invalid table prefix."
+msgstr "metadata.json contient un préfixe de table non valide."
+
+#: views/admin-page.php:16
+msgid "Warning: Destructive Operation"
+msgstr "Avertissement : Opération destructrice"
+
+#: views/admin-page.php:17
+msgid "This will REPLACE your entire WordPress site including the database, uploads, plugins, and themes. Your current admin credentials will be replaced by those from the backup. Existing directories will be renamed to .old — you can remove them after verifying the restore."
+msgstr "Ceci REMPLACERA l'intégralité de votre site WordPress, y compris la base de données, les fichiers téléversés, les extensions et les thèmes. Vos identifiants d'administration actuels seront remplacés par ceux de la sauvegarde. Les répertoires existants seront renommés en .old - vous pourrez les supprimer après avoir vérifié la restauration."
+
+#: views/admin-page.php:21
+msgid "Note:"
+msgstr "Remarque :"
+
+#: views/admin-page.php:22
+msgid "The ZIP file must fit within your server upload_max_filesize and post_max_size limits."
+msgstr "Le fichier ZIP doit respecter les limites upload_max_filesize et post_max_size de votre serveur."
+
+#: views/admin-page.php:32
+msgid "I understand this is destructive and I have already backed up my website."
+msgstr "Je comprends que cela est destructeur et j'ai déjà sauvegardé mon site web."
+
+#: views/admin-page.php:37
+msgid "Upload & Restore"
+msgstr "Téléverser & Restaurer"

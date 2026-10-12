@@ -1,0 +1,381 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: GrabWP Restore 1.0.3\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/grabwp-restore\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Indonesian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-11T19:14:52+00:00\n"
+"PO-Revision-Date: 2026-10-11 19:23+0000\n"
+"Language: id_ID\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: grabwp-restore\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. Plugin Name of the plugin
+#: grabwp-restore.php
+#: includes/class-grabwp-restore-admin.php:32
+#: includes/class-grabwp-restore-admin.php:33
+#: views/admin-page.php:13
+msgid "GrabWP Restore"
+msgstr "GrabWP Restore"
+
+#. Description of the plugin
+#: grabwp-restore.php
+msgid "Restore a full WordPress site from a GrabWP tenant export ZIP file."
+msgstr "Pulihkan seluruh situs WordPress dari file ZIP ekspor tenant GrabWP."
+
+#. Author of the plugin
+#: grabwp-restore.php
+msgid "taicv"
+msgstr "taicv"
+
+#: includes/class-grabwp-restore-admin.php:62
+msgid "This will permanently replace your entire site. Continue?"
+msgstr "Ini akan mengganti seluruh situs Anda secara permanen. Lanjutkan?"
+
+#: includes/class-grabwp-restore-admin.php:63
+msgid "Uploading..."
+msgstr "Mengunggah..."
+
+#: includes/class-grabwp-restore-admin.php:64
+msgid "Restoring..."
+msgstr "Memulihkan..."
+
+#: includes/class-grabwp-restore-admin.php:65
+msgid "Restore complete! Log in with the exported site credentials. You can safely remove the .old directories in wp-content/."
+msgstr "Pemulihan selesai! Masuk dengan kredensial situs yang diekspor. Anda dapat menghapus direktori .old di wp-content/ dengan aman."
+
+#: includes/class-grabwp-restore-admin.php:66
+msgid "Error:"
+msgstr "Kesalahan:"
+
+#: includes/class-grabwp-restore-admin.php:67
+msgid "Please select a ZIP file."
+msgstr "Harap pilih file ZIP."
+
+#: includes/class-grabwp-restore-admin.php:68
+msgid "Upload failed. Check the PHP upload limit and your connection."
+msgstr "Unggahan gagal. Periksa batas unggahan PHP dan koneksi Anda."
+
+#: includes/class-grabwp-restore-admin.php:69
+msgid "Restore step failed."
+msgstr "Langkah pemulihan gagal."
+
+#: includes/class-grabwp-restore-admin.php:70
+msgid "Step request failed. The server may have timed out."
+msgstr "Permintaan langkah gagal. Waktu server mungkin telah habis."
+
+#: includes/class-grabwp-restore-admin.php:73
+msgid "Validating archive..."
+msgstr "Memvalidasi arsip..."
+
+#: includes/class-grabwp-restore-admin.php:74
+msgid "Reading archive metadata..."
+msgstr "Membaca metadata arsip..."
+
+#: includes/class-grabwp-restore-admin.php:75
+msgid "Importing database..."
+msgstr "Mengimpor database..."
+
+#: includes/class-grabwp-restore-admin.php:76
+msgid "Restoring uploads..."
+msgstr "Memulihkan unggahan..."
+
+#: includes/class-grabwp-restore-admin.php:77
+msgid "Restoring plugins..."
+msgstr "Memulihkan plugin..."
+
+#: includes/class-grabwp-restore-admin.php:78
+msgid "Restoring themes..."
+msgstr "Memulihkan tema..."
+
+#: includes/class-grabwp-restore-admin.php:79
+msgid "Cleaning up..."
+msgstr "Membersihkan..."
+
+#: includes/class-grabwp-restore-admin.php:92
+msgid "Unauthorized."
+msgstr "Tidak sah."
+
+#: includes/class-grabwp-restore-admin.php:99
+msgid "A restore is already in progress."
+msgstr "Pemulihan sedang berlangsung."
+
+#: includes/class-grabwp-restore-admin.php:102
+#: includes/class-grabwp-restore-admin.php:112
+msgid "Invalid archive upload."
+msgstr "Unggahan arsip tidak valid."
+
+#: includes/class-grabwp-restore-admin.php:117
+msgid "Only ZIP archives are accepted."
+msgstr "Hanya arsip ZIP yang diterima."
+
+#: includes/class-grabwp-restore-admin.php:138
+msgid "Could not create restore job."
+msgstr "Tidak dapat membuat tugas pemulihan."
+
+#: includes/class-grabwp-restore-admin.php:151
+msgid "WordPress could not initialize direct filesystem access."
+msgstr "WordPress tidak dapat menginisialisasi akses sistem file langsung."
+
+#: includes/class-grabwp-restore-admin.php:188
+msgid "Could not secure the uploaded archive."
+msgstr "Tidak dapat mengamankan arsip yang diunggah."
+
+#: includes/class-grabwp-restore-admin.php:193
+msgid "Could not resolve the uploaded archive path."
+msgstr "Tidak dapat menyelesaikan jalur arsip yang diunggah."
+
+#: includes/class-grabwp-restore-admin.php:203
+msgid "Uploaded archives must not be stored inside the web root."
+msgstr "Arsip yang diunggah tidak boleh disimpan di dalam root web."
+
+#: includes/class-grabwp-restore-admin.php:208
+#: includes/class-grabwp-restore-validator.php:44
+msgid "PHP ZipArchive extension is required."
+msgstr "Ekstensi PHP ZipArchive diperlukan."
+
+#: includes/class-grabwp-restore-admin.php:213
+#: includes/class-grabwp-restore-validator.php:49
+msgid "Invalid or corrupted ZIP archive."
+msgstr "Arsip ZIP tidak valid atau rusak."
+
+#: includes/class-grabwp-restore-admin.php:239
+msgid "Multisite restore is not supported."
+msgstr "Pemulihan multisitus tidak didukung."
+
+#: includes/class-grabwp-restore-admin.php:250
+msgid "Job not found or expired."
+msgstr "Tugas tidak ditemukan atau kedaluwarsa."
+
+#: includes/class-grabwp-restore-admin.php:261
+msgid "Invalid job token."
+msgstr "Token tugas tidak valid."
+
+#: includes/class-grabwp-restore-admin.php:266
+msgid "Restore is already complete."
+msgstr "Pemulihan sudah selesai."
+
+#: includes/class-grabwp-restore-admin.php:416
+#: includes/class-grabwp-restore-admin.php:432
+msgid "A private system temporary directory is required."
+msgstr "Direktori sementara sistem pribadi diperlukan."
+
+#: includes/class-grabwp-restore-admin.php:422
+msgid "Could not create a private temporary directory."
+msgstr "Tidak dapat membuat direktori sementara pribadi."
+
+#: includes/class-grabwp-restore-admin.php:426
+msgid "Could not resolve the private temporary directory."
+msgstr "Tidak dapat menyelesaikan direktori sementara pribadi."
+
+#: includes/class-grabwp-restore-db-importer.php:29
+msgid "Restore archive not found."
+msgstr "Arsip pemulihan tidak ditemukan."
+
+#: includes/class-grabwp-restore-db-importer.php:68
+#, php-format
+msgid "Database import failed: %s"
+msgstr "Impor database gagal: %s"
+
+#: includes/class-grabwp-restore-db-importer.php:127
+#: includes/class-grabwp-restore-db-importer.php:147
+msgid "Archive contains a database statement larger than the server limit."
+msgstr "Arsip berisi pernyataan database yang lebih besar dari batas server."
+
+#: includes/class-grabwp-restore-db-importer.php:162
+msgid "Cannot open restore archive."
+msgstr "Tidak dapat membuka arsip pemulihan."
+
+#: includes/class-grabwp-restore-db-importer.php:167
+msgid "Archive database.sql could not be read."
+msgstr "database.sql arsip tidak dapat dibaca."
+
+#: includes/class-grabwp-restore-db-importer.php:208
+msgid "Archive contains a prohibited database operation."
+msgstr "Arsip berisi operasi database yang dilarang."
+
+#: includes/class-grabwp-restore-db-importer.php:212
+msgid "Archive contains SQL outside the exported site tables."
+msgstr "Arsip berisi SQL di luar tabel situs yang diekspor."
+
+#: includes/class-grabwp-restore-db-importer.php:215
+msgid "Archive attempts to rename a database table."
+msgstr "Arsip mencoba mengganti nama tabel database."
+
+#: includes/class-grabwp-restore-file-restorer.php:45
+msgid "Could not stage the plugin directory outside the web root."
+msgstr "Tidak dapat menyiapkan direktori plugin di luar root web."
+
+#: includes/class-grabwp-restore-file-restorer.php:53
+#: includes/class-grabwp-restore-file-restorer.php:63
+msgid "Could not preserve the existing directory."
+msgstr "Tidak dapat mempertahankan direktori yang ada."
+
+#: includes/class-grabwp-restore-file-restorer.php:177
+#: includes/class-grabwp-restore-validator.php:227
+msgid "WordPress could not initialize the filesystem."
+msgstr "WordPress tidak dapat menginisialisasi sistem file."
+
+#: includes/class-grabwp-restore-file-restorer.php:181
+#: includes/class-grabwp-restore-validator.php:231
+msgid "Restore requires direct filesystem access."
+msgstr "Pemulihan membutuhkan akses sistem file langsung."
+
+#: includes/class-grabwp-restore-step-controller.php:31
+msgid "Invalid restore step."
+msgstr "Langkah pemulihan tidak valid."
+
+#: includes/class-grabwp-restore-step-controller.php:48
+msgid "Archive validated."
+msgstr "Arsip divalidasi."
+
+#: includes/class-grabwp-restore-step-controller.php:61
+msgid "Archive metadata verified."
+msgstr "Metadata arsip diverifikasi."
+
+#: includes/class-grabwp-restore-step-controller.php:87
+msgid "Database imported, prefixes rewritten, and URLs updated."
+msgstr "Database diimpor, awalan ditulis ulang, dan URL diperbarui."
+
+#: includes/class-grabwp-restore-step-controller.php:122
+msgid "No uploads directory in archive, skipped."
+msgstr "Tidak ada direktori unggahan di arsip, dilewati."
+
+#: includes/class-grabwp-restore-step-controller.php:137
+msgid "Uploads restored (old files in uploads.old/)."
+msgstr "Unggahan dipulihkan (file lama di uploads.old/)."
+
+#: includes/class-grabwp-restore-step-controller.php:145
+msgid "No plugins directory in archive, skipped."
+msgstr "Tidak ada direktori plugin di arsip, dilewati."
+
+#: includes/class-grabwp-restore-step-controller.php:160
+msgid "Plugins restored (old plugins in plugins.old/)."
+msgstr "Plugin dipulihkan (plugin lama di plugins.old/)."
+
+#: includes/class-grabwp-restore-step-controller.php:168
+msgid "No themes directory in archive, skipped."
+msgstr "Tidak ada direktori tema di arsip, dilewati."
+
+#: includes/class-grabwp-restore-step-controller.php:183
+msgid "Themes restored (old themes in themes.old/)."
+msgstr "Tema dipulihkan (tema lama di themes.old/)."
+
+#: includes/class-grabwp-restore-step-controller.php:195
+msgid "Restore complete."
+msgstr "Pemulihan selesai."
+
+#: includes/class-grabwp-restore-validator.php:27
+msgid "A wp-content destination is not writable."
+msgstr "Tujuan wp-content tidak dapat ditulis."
+
+#: includes/class-grabwp-restore-validator.php:41
+msgid "Archive file not found."
+msgstr "File arsip tidak ditemukan."
+
+#: includes/class-grabwp-restore-validator.php:59
+msgid "Archive contains too many files."
+msgstr "Arsip berisi terlalu banyak file."
+
+#: includes/class-grabwp-restore-validator.php:65
+#: includes/class-grabwp-restore-validator.php:149
+msgid "Archive contains an unsafe file path."
+msgstr "Arsip berisi jalur file yang tidak aman."
+
+#: includes/class-grabwp-restore-validator.php:70
+msgid "Archive contains an unreadable entry."
+msgstr "Arsip berisi entri yang tidak dapat dibaca."
+
+#: includes/class-grabwp-restore-validator.php:75
+msgid "Archive expands beyond the allowed size."
+msgstr "Arsip mengembang melebihi ukuran yang diizinkan."
+
+#: includes/class-grabwp-restore-validator.php:79
+msgid "Archive contains an unsafe compression ratio."
+msgstr "Arsip berisi rasio kompresi yang tidak aman."
+
+#: includes/class-grabwp-restore-validator.php:91
+msgid "Archive is missing database.sql."
+msgstr "Arsip tidak memiliki database.sql."
+
+#: includes/class-grabwp-restore-validator.php:94
+msgid "Archive is missing metadata.json."
+msgstr "Arsip tidak memiliki metadata.json."
+
+#: includes/class-grabwp-restore-validator.php:118
+#: includes/class-grabwp-restore-validator.php:270
+msgid "Cannot open archive."
+msgstr "Tidak dapat membuka arsip."
+
+#: includes/class-grabwp-restore-validator.php:126
+msgid "Cannot create the restore destination directory."
+msgstr "Tidak dapat membuat direktori tujuan pemulihan."
+
+#: includes/class-grabwp-restore-validator.php:132
+msgid "Restore destination is not a safe directory."
+msgstr "Tujuan pemulihan bukan direktori yang aman."
+
+#: includes/class-grabwp-restore-validator.php:161
+#: includes/class-grabwp-restore-validator.php:169
+msgid "Cannot create an archive directory."
+msgstr "Tidak dapat membuat direktori arsip."
+
+#: includes/class-grabwp-restore-validator.php:174
+msgid "Archive path escapes the restore destination."
+msgstr "Jalur arsip keluar dari tujuan pemulihan."
+
+#: includes/class-grabwp-restore-validator.php:180
+msgid "Cannot read an archive entry."
+msgstr "Tidak dapat membaca entri arsip."
+
+#: includes/class-grabwp-restore-validator.php:185
+msgid "Cannot write an archive entry."
+msgstr "Tidak dapat menulis entri arsip."
+
+#: includes/class-grabwp-restore-validator.php:275
+msgid "metadata.json is missing or too large."
+msgstr "metadata.json tidak ada atau terlalu besar."
+
+#: includes/class-grabwp-restore-validator.php:280
+msgid "metadata.json could not be read."
+msgstr "metadata.json tidak dapat dibaca."
+
+#: includes/class-grabwp-restore-validator.php:284
+msgid "metadata.json is invalid JSON."
+msgstr "metadata.json bukan JSON yang valid."
+
+#: includes/class-grabwp-restore-validator.php:288
+msgid "metadata.json is missing tenant_prefix."
+msgstr "metadata.json tidak memiliki tenant_prefix."
+
+#: includes/class-grabwp-restore-validator.php:292
+msgid "metadata.json contains an invalid table prefix."
+msgstr "metadata.json berisi awalan tabel yang tidak valid."
+
+#: views/admin-page.php:16
+msgid "Warning: Destructive Operation"
+msgstr "Peringatan: Operasi Destruktif"
+
+#: views/admin-page.php:17
+msgid "This will REPLACE your entire WordPress site including the database, uploads, plugins, and themes. Your current admin credentials will be replaced by those from the backup. Existing directories will be renamed to .old — you can remove them after verifying the restore."
+msgstr "Ini akan MENGGANTI seluruh situs WordPress Anda termasuk database, unggahan, plugin, dan tema. Kredensial admin Anda saat ini akan diganti dengan yang berasal dari cadangan. Direktori yang ada akan diubah namanya menjadi .old - Anda dapat menghapusnya setelah memverifikasi pemulihan."
+
+#: views/admin-page.php:21
+msgid "Note:"
+msgstr "Catatan:"
+
+#: views/admin-page.php:22
+msgid "The ZIP file must fit within your server upload_max_filesize and post_max_size limits."
+msgstr "File ZIP harus muat dalam batas upload_max_filesize dan post_max_size server Anda."
+
+#: views/admin-page.php:32
+msgid "I understand this is destructive and I have already backed up my website."
+msgstr "Saya mengerti ini bersifat destruktif dan saya telah mencadangkan situs web saya."
+
+#: views/admin-page.php:37
+msgid "Upload & Restore"
+msgstr "Unggah & Pulihkan"

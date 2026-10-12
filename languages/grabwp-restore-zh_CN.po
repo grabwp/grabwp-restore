@@ -1,0 +1,381 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: GrabWP Restore 1.0.3\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/grabwp-restore\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (China)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-11T19:14:52+00:00\n"
+"PO-Revision-Date: 2026-10-11 19:56+0000\n"
+"Language: zh_CN\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: grabwp-restore\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. Plugin Name of the plugin
+#: grabwp-restore.php
+#: includes/class-grabwp-restore-admin.php:32
+#: includes/class-grabwp-restore-admin.php:33
+#: views/admin-page.php:13
+msgid "GrabWP Restore"
+msgstr "GrabWP Restore"
+
+#. Description of the plugin
+#: grabwp-restore.php
+msgid "Restore a full WordPress site from a GrabWP tenant export ZIP file."
+msgstr "从 GrabWP 租户导出的 ZIP 文件恢复完整的 WordPress 站点。"
+
+#. Author of the plugin
+#: grabwp-restore.php
+msgid "taicv"
+msgstr "taicv"
+
+#: includes/class-grabwp-restore-admin.php:62
+msgid "This will permanently replace your entire site. Continue?"
+msgstr "这将永久替换您的整个站点。是否继续？"
+
+#: includes/class-grabwp-restore-admin.php:63
+msgid "Uploading..."
+msgstr "正在上传..."
+
+#: includes/class-grabwp-restore-admin.php:64
+msgid "Restoring..."
+msgstr "正在恢复..."
+
+#: includes/class-grabwp-restore-admin.php:65
+msgid "Restore complete! Log in with the exported site credentials. You can safely remove the .old directories in wp-content/."
+msgstr "恢复完成！请使用导出的站点凭据登录。您可以安全地删除 wp-content/ 中的 .old 目录。"
+
+#: includes/class-grabwp-restore-admin.php:66
+msgid "Error:"
+msgstr "错误："
+
+#: includes/class-grabwp-restore-admin.php:67
+msgid "Please select a ZIP file."
+msgstr "请选择一个 ZIP 文件。"
+
+#: includes/class-grabwp-restore-admin.php:68
+msgid "Upload failed. Check the PHP upload limit and your connection."
+msgstr "上传失败。请检查 PHP 上传限制和您的网络连接。"
+
+#: includes/class-grabwp-restore-admin.php:69
+msgid "Restore step failed."
+msgstr "恢复步骤失败。"
+
+#: includes/class-grabwp-restore-admin.php:70
+msgid "Step request failed. The server may have timed out."
+msgstr "步骤请求失败。服务器可能已超时。"
+
+#: includes/class-grabwp-restore-admin.php:73
+msgid "Validating archive..."
+msgstr "正在验证存档..."
+
+#: includes/class-grabwp-restore-admin.php:74
+msgid "Reading archive metadata..."
+msgstr "正在读取存档元数据..."
+
+#: includes/class-grabwp-restore-admin.php:75
+msgid "Importing database..."
+msgstr "正在导入数据库..."
+
+#: includes/class-grabwp-restore-admin.php:76
+msgid "Restoring uploads..."
+msgstr "正在恢复上传文件..."
+
+#: includes/class-grabwp-restore-admin.php:77
+msgid "Restoring plugins..."
+msgstr "正在恢复插件..."
+
+#: includes/class-grabwp-restore-admin.php:78
+msgid "Restoring themes..."
+msgstr "正在恢复主题..."
+
+#: includes/class-grabwp-restore-admin.php:79
+msgid "Cleaning up..."
+msgstr "正在清理..."
+
+#: includes/class-grabwp-restore-admin.php:92
+msgid "Unauthorized."
+msgstr "未授权。"
+
+#: includes/class-grabwp-restore-admin.php:99
+msgid "A restore is already in progress."
+msgstr "恢复已在进行中。"
+
+#: includes/class-grabwp-restore-admin.php:102
+#: includes/class-grabwp-restore-admin.php:112
+msgid "Invalid archive upload."
+msgstr "无效的存档上传。"
+
+#: includes/class-grabwp-restore-admin.php:117
+msgid "Only ZIP archives are accepted."
+msgstr "仅接受 ZIP 存档。"
+
+#: includes/class-grabwp-restore-admin.php:138
+msgid "Could not create restore job."
+msgstr "无法创建恢复任务。"
+
+#: includes/class-grabwp-restore-admin.php:151
+msgid "WordPress could not initialize direct filesystem access."
+msgstr "WordPress 无法初始化直接文件系统访问。"
+
+#: includes/class-grabwp-restore-admin.php:188
+msgid "Could not secure the uploaded archive."
+msgstr "无法保护上传的存档。"
+
+#: includes/class-grabwp-restore-admin.php:193
+msgid "Could not resolve the uploaded archive path."
+msgstr "无法解析上传的存档路径。"
+
+#: includes/class-grabwp-restore-admin.php:203
+msgid "Uploaded archives must not be stored inside the web root."
+msgstr "上传的存档不得存储在网站根目录内。"
+
+#: includes/class-grabwp-restore-admin.php:208
+#: includes/class-grabwp-restore-validator.php:44
+msgid "PHP ZipArchive extension is required."
+msgstr "需要 PHP ZipArchive 扩展。"
+
+#: includes/class-grabwp-restore-admin.php:213
+#: includes/class-grabwp-restore-validator.php:49
+msgid "Invalid or corrupted ZIP archive."
+msgstr "无效或损坏的 ZIP 存档。"
+
+#: includes/class-grabwp-restore-admin.php:239
+msgid "Multisite restore is not supported."
+msgstr "不支持多站点恢复。"
+
+#: includes/class-grabwp-restore-admin.php:250
+msgid "Job not found or expired."
+msgstr "任务未找到或已过期。"
+
+#: includes/class-grabwp-restore-admin.php:261
+msgid "Invalid job token."
+msgstr "无效的任务令牌。"
+
+#: includes/class-grabwp-restore-admin.php:266
+msgid "Restore is already complete."
+msgstr "恢复已完成。"
+
+#: includes/class-grabwp-restore-admin.php:416
+#: includes/class-grabwp-restore-admin.php:432
+msgid "A private system temporary directory is required."
+msgstr "需要一个私有系统临时目录。"
+
+#: includes/class-grabwp-restore-admin.php:422
+msgid "Could not create a private temporary directory."
+msgstr "无法创建私有临时目录。"
+
+#: includes/class-grabwp-restore-admin.php:426
+msgid "Could not resolve the private temporary directory."
+msgstr "无法解析私有临时目录。"
+
+#: includes/class-grabwp-restore-db-importer.php:29
+msgid "Restore archive not found."
+msgstr "未找到恢复存档。"
+
+#: includes/class-grabwp-restore-db-importer.php:68
+#, php-format
+msgid "Database import failed: %s"
+msgstr "数据库导入失败：%s"
+
+#: includes/class-grabwp-restore-db-importer.php:127
+#: includes/class-grabwp-restore-db-importer.php:147
+msgid "Archive contains a database statement larger than the server limit."
+msgstr "存档包含大于服务器限制的数据库语句。"
+
+#: includes/class-grabwp-restore-db-importer.php:162
+msgid "Cannot open restore archive."
+msgstr "无法打开恢复存档。"
+
+#: includes/class-grabwp-restore-db-importer.php:167
+msgid "Archive database.sql could not be read."
+msgstr "无法读取存档的 database.sql。"
+
+#: includes/class-grabwp-restore-db-importer.php:208
+msgid "Archive contains a prohibited database operation."
+msgstr "存档包含被禁止的数据库操作。"
+
+#: includes/class-grabwp-restore-db-importer.php:212
+msgid "Archive contains SQL outside the exported site tables."
+msgstr "存档包含导出站点表以外的 SQL。"
+
+#: includes/class-grabwp-restore-db-importer.php:215
+msgid "Archive attempts to rename a database table."
+msgstr "存档尝试重命名数据库表。"
+
+#: includes/class-grabwp-restore-file-restorer.php:45
+msgid "Could not stage the plugin directory outside the web root."
+msgstr "无法将插件目录暂存到网站根目录外。"
+
+#: includes/class-grabwp-restore-file-restorer.php:53
+#: includes/class-grabwp-restore-file-restorer.php:63
+msgid "Could not preserve the existing directory."
+msgstr "无法保留现有目录。"
+
+#: includes/class-grabwp-restore-file-restorer.php:177
+#: includes/class-grabwp-restore-validator.php:227
+msgid "WordPress could not initialize the filesystem."
+msgstr "WordPress 无法初始化文件系统。"
+
+#: includes/class-grabwp-restore-file-restorer.php:181
+#: includes/class-grabwp-restore-validator.php:231
+msgid "Restore requires direct filesystem access."
+msgstr "恢复需要直接文件系统访问。"
+
+#: includes/class-grabwp-restore-step-controller.php:31
+msgid "Invalid restore step."
+msgstr "无效的恢复步骤。"
+
+#: includes/class-grabwp-restore-step-controller.php:48
+msgid "Archive validated."
+msgstr "存档已验证。"
+
+#: includes/class-grabwp-restore-step-controller.php:61
+msgid "Archive metadata verified."
+msgstr "存档元数据已验证。"
+
+#: includes/class-grabwp-restore-step-controller.php:87
+msgid "Database imported, prefixes rewritten, and URLs updated."
+msgstr "数据库已导入，前缀已重写，URL 已更新。"
+
+#: includes/class-grabwp-restore-step-controller.php:122
+msgid "No uploads directory in archive, skipped."
+msgstr "存档中没有 uploads 目录，已跳过。"
+
+#: includes/class-grabwp-restore-step-controller.php:137
+msgid "Uploads restored (old files in uploads.old/)."
+msgstr "上传文件已恢复（旧文件在 uploads.old/ 中）。"
+
+#: includes/class-grabwp-restore-step-controller.php:145
+msgid "No plugins directory in archive, skipped."
+msgstr "存档中没有 plugins 目录，已跳过。"
+
+#: includes/class-grabwp-restore-step-controller.php:160
+msgid "Plugins restored (old plugins in plugins.old/)."
+msgstr "插件已恢复（旧插件在 plugins.old/ 中）。"
+
+#: includes/class-grabwp-restore-step-controller.php:168
+msgid "No themes directory in archive, skipped."
+msgstr "存档中没有 themes 目录，已跳过。"
+
+#: includes/class-grabwp-restore-step-controller.php:183
+msgid "Themes restored (old themes in themes.old/)."
+msgstr "主题已恢复（旧主题在 themes.old/ 中）。"
+
+#: includes/class-grabwp-restore-step-controller.php:195
+msgid "Restore complete."
+msgstr "恢复完成。"
+
+#: includes/class-grabwp-restore-validator.php:27
+msgid "A wp-content destination is not writable."
+msgstr "wp-content 目标不可写。"
+
+#: includes/class-grabwp-restore-validator.php:41
+msgid "Archive file not found."
+msgstr "未找到存档文件。"
+
+#: includes/class-grabwp-restore-validator.php:59
+msgid "Archive contains too many files."
+msgstr "存档包含太多文件。"
+
+#: includes/class-grabwp-restore-validator.php:65
+#: includes/class-grabwp-restore-validator.php:149
+msgid "Archive contains an unsafe file path."
+msgstr "存档包含不安全的文件路径。"
+
+#: includes/class-grabwp-restore-validator.php:70
+msgid "Archive contains an unreadable entry."
+msgstr "存档包含不可读的条目。"
+
+#: includes/class-grabwp-restore-validator.php:75
+msgid "Archive expands beyond the allowed size."
+msgstr "存档扩展后超出允许的大小。"
+
+#: includes/class-grabwp-restore-validator.php:79
+msgid "Archive contains an unsafe compression ratio."
+msgstr "存档包含不安全的压缩率。"
+
+#: includes/class-grabwp-restore-validator.php:91
+msgid "Archive is missing database.sql."
+msgstr "存档缺少 database.sql。"
+
+#: includes/class-grabwp-restore-validator.php:94
+msgid "Archive is missing metadata.json."
+msgstr "存档缺少 metadata.json。"
+
+#: includes/class-grabwp-restore-validator.php:118
+#: includes/class-grabwp-restore-validator.php:270
+msgid "Cannot open archive."
+msgstr "无法打开存档。"
+
+#: includes/class-grabwp-restore-validator.php:126
+msgid "Cannot create the restore destination directory."
+msgstr "无法创建恢复目标目录。"
+
+#: includes/class-grabwp-restore-validator.php:132
+msgid "Restore destination is not a safe directory."
+msgstr "恢复目标不是一个安全的目录。"
+
+#: includes/class-grabwp-restore-validator.php:161
+#: includes/class-grabwp-restore-validator.php:169
+msgid "Cannot create an archive directory."
+msgstr "无法创建存档目录。"
+
+#: includes/class-grabwp-restore-validator.php:174
+msgid "Archive path escapes the restore destination."
+msgstr "存档路径超出了恢复目标的范围。"
+
+#: includes/class-grabwp-restore-validator.php:180
+msgid "Cannot read an archive entry."
+msgstr "无法读取存档条目。"
+
+#: includes/class-grabwp-restore-validator.php:185
+msgid "Cannot write an archive entry."
+msgstr "无法写入存档条目。"
+
+#: includes/class-grabwp-restore-validator.php:275
+msgid "metadata.json is missing or too large."
+msgstr "metadata.json 缺失或太大。"
+
+#: includes/class-grabwp-restore-validator.php:280
+msgid "metadata.json could not be read."
+msgstr "无法读取 metadata.json。"
+
+#: includes/class-grabwp-restore-validator.php:284
+msgid "metadata.json is invalid JSON."
+msgstr "metadata.json 是无效的 JSON。"
+
+#: includes/class-grabwp-restore-validator.php:288
+msgid "metadata.json is missing tenant_prefix."
+msgstr "metadata.json 缺少 tenant_prefix。"
+
+#: includes/class-grabwp-restore-validator.php:292
+msgid "metadata.json contains an invalid table prefix."
+msgstr "metadata.json 包含无效的表前缀。"
+
+#: views/admin-page.php:16
+msgid "Warning: Destructive Operation"
+msgstr "警告：破坏性操作"
+
+#: views/admin-page.php:17
+msgid "This will REPLACE your entire WordPress site including the database, uploads, plugins, and themes. Your current admin credentials will be replaced by those from the backup. Existing directories will be renamed to .old — you can remove them after verifying the restore."
+msgstr "这将替换您的整个 WordPress 站点，包括数据库、上传文件、插件和主题。您当前的管理员凭据将被备份中的凭据替换。现有目录将被重命名为 .old，您可以在验证恢复后将其删除。"
+
+#: views/admin-page.php:21
+msgid "Note:"
+msgstr "注意："
+
+#: views/admin-page.php:22
+msgid "The ZIP file must fit within your server upload_max_filesize and post_max_size limits."
+msgstr "ZIP 文件必须在您的服务器 upload_max_filesize 和 post_max_size 限制内。"
+
+#: views/admin-page.php:32
+msgid "I understand this is destructive and I have already backed up my website."
+msgstr "我了解这是破坏性操作，并且我已备份我的网站。"
+
+#: views/admin-page.php:37
+msgid "Upload & Restore"
+msgstr "上传并恢复"

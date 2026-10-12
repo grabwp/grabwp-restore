@@ -1,0 +1,381 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: GrabWP Restore 1.0.3\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/grabwp-restore\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Vietnamese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-11T19:14:52+00:00\n"
+"PO-Revision-Date: 2026-10-11 19:23+0000\n"
+"Language: vi\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: grabwp-restore\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. Plugin Name of the plugin
+#: grabwp-restore.php
+#: includes/class-grabwp-restore-admin.php:32
+#: includes/class-grabwp-restore-admin.php:33
+#: views/admin-page.php:13
+msgid "GrabWP Restore"
+msgstr "GrabWP Restore"
+
+#. Description of the plugin
+#: grabwp-restore.php
+msgid "Restore a full WordPress site from a GrabWP tenant export ZIP file."
+msgstr "Khôi phục toàn bộ trang web WordPress từ tệp ZIP xuất tenant của GrabWP."
+
+#. Author of the plugin
+#: grabwp-restore.php
+msgid "taicv"
+msgstr "taicv"
+
+#: includes/class-grabwp-restore-admin.php:62
+msgid "This will permanently replace your entire site. Continue?"
+msgstr "Hành động này sẽ thay thế vĩnh viễn toàn bộ trang web của bạn. Tiếp tục?"
+
+#: includes/class-grabwp-restore-admin.php:63
+msgid "Uploading..."
+msgstr "Đang tải lên..."
+
+#: includes/class-grabwp-restore-admin.php:64
+msgid "Restoring..."
+msgstr "Đang khôi phục..."
+
+#: includes/class-grabwp-restore-admin.php:65
+msgid "Restore complete! Log in with the exported site credentials. You can safely remove the .old directories in wp-content/."
+msgstr "Khôi phục hoàn tất! Hãy đăng nhập bằng thông tin đăng nhập của trang web đã xuất. Bạn có thể xóa an toàn các thư mục .old trong wp-content/."
+
+#: includes/class-grabwp-restore-admin.php:66
+msgid "Error:"
+msgstr "Lỗi:"
+
+#: includes/class-grabwp-restore-admin.php:67
+msgid "Please select a ZIP file."
+msgstr "Vui lòng chọn một tệp ZIP."
+
+#: includes/class-grabwp-restore-admin.php:68
+msgid "Upload failed. Check the PHP upload limit and your connection."
+msgstr "Tải lên thất bại. Vui lòng kiểm tra giới hạn tải lên của PHP và kết nối của bạn."
+
+#: includes/class-grabwp-restore-admin.php:69
+msgid "Restore step failed."
+msgstr "Bước khôi phục thất bại."
+
+#: includes/class-grabwp-restore-admin.php:70
+msgid "Step request failed. The server may have timed out."
+msgstr "Yêu cầu bước thất bại. Máy chủ có thể đã hết thời gian chờ."
+
+#: includes/class-grabwp-restore-admin.php:73
+msgid "Validating archive..."
+msgstr "Đang xác thực bản lưu trữ..."
+
+#: includes/class-grabwp-restore-admin.php:74
+msgid "Reading archive metadata..."
+msgstr "Đang đọc siêu dữ liệu bản lưu trữ..."
+
+#: includes/class-grabwp-restore-admin.php:75
+msgid "Importing database..."
+msgstr "Đang nhập cơ sở dữ liệu..."
+
+#: includes/class-grabwp-restore-admin.php:76
+msgid "Restoring uploads..."
+msgstr "Đang khôi phục tệp tải lên..."
+
+#: includes/class-grabwp-restore-admin.php:77
+msgid "Restoring plugins..."
+msgstr "Đang khôi phục plugin..."
+
+#: includes/class-grabwp-restore-admin.php:78
+msgid "Restoring themes..."
+msgstr "Đang khôi phục giao diện..."
+
+#: includes/class-grabwp-restore-admin.php:79
+msgid "Cleaning up..."
+msgstr "Đang dọn dẹp..."
+
+#: includes/class-grabwp-restore-admin.php:92
+msgid "Unauthorized."
+msgstr "Không có quyền truy cập."
+
+#: includes/class-grabwp-restore-admin.php:99
+msgid "A restore is already in progress."
+msgstr "Một tiến trình khôi phục đang được thực hiện."
+
+#: includes/class-grabwp-restore-admin.php:102
+#: includes/class-grabwp-restore-admin.php:112
+msgid "Invalid archive upload."
+msgstr "Bản lưu trữ tải lên không hợp lệ."
+
+#: includes/class-grabwp-restore-admin.php:117
+msgid "Only ZIP archives are accepted."
+msgstr "Chỉ chấp nhận các bản lưu trữ ZIP."
+
+#: includes/class-grabwp-restore-admin.php:138
+msgid "Could not create restore job."
+msgstr "Không thể tạo công việc khôi phục."
+
+#: includes/class-grabwp-restore-admin.php:151
+msgid "WordPress could not initialize direct filesystem access."
+msgstr "WordPress không thể khởi tạo quyền truy cập hệ thống tệp trực tiếp."
+
+#: includes/class-grabwp-restore-admin.php:188
+msgid "Could not secure the uploaded archive."
+msgstr "Không thể bảo mật bản lưu trữ đã tải lên."
+
+#: includes/class-grabwp-restore-admin.php:193
+msgid "Could not resolve the uploaded archive path."
+msgstr "Không thể phân giải đường dẫn bản lưu trữ đã tải lên."
+
+#: includes/class-grabwp-restore-admin.php:203
+msgid "Uploaded archives must not be stored inside the web root."
+msgstr "Các bản lưu trữ tải lên không được lưu trữ bên trong thư mục gốc của trang web."
+
+#: includes/class-grabwp-restore-admin.php:208
+#: includes/class-grabwp-restore-validator.php:44
+msgid "PHP ZipArchive extension is required."
+msgstr "Yêu cầu phải có phần mở rộng PHP ZipArchive."
+
+#: includes/class-grabwp-restore-admin.php:213
+#: includes/class-grabwp-restore-validator.php:49
+msgid "Invalid or corrupted ZIP archive."
+msgstr "Bản lưu trữ ZIP không hợp lệ hoặc bị hỏng."
+
+#: includes/class-grabwp-restore-admin.php:239
+msgid "Multisite restore is not supported."
+msgstr "Không hỗ trợ khôi phục Multisite."
+
+#: includes/class-grabwp-restore-admin.php:250
+msgid "Job not found or expired."
+msgstr "Không tìm thấy công việc hoặc đã hết hạn."
+
+#: includes/class-grabwp-restore-admin.php:261
+msgid "Invalid job token."
+msgstr "Mã công việc không hợp lệ."
+
+#: includes/class-grabwp-restore-admin.php:266
+msgid "Restore is already complete."
+msgstr "Tiến trình khôi phục đã hoàn tất."
+
+#: includes/class-grabwp-restore-admin.php:416
+#: includes/class-grabwp-restore-admin.php:432
+msgid "A private system temporary directory is required."
+msgstr "Yêu cầu phải có một thư mục tạm thời riêng của hệ thống."
+
+#: includes/class-grabwp-restore-admin.php:422
+msgid "Could not create a private temporary directory."
+msgstr "Không thể tạo thư mục tạm thời riêng."
+
+#: includes/class-grabwp-restore-admin.php:426
+msgid "Could not resolve the private temporary directory."
+msgstr "Không thể phân giải thư mục tạm thời riêng."
+
+#: includes/class-grabwp-restore-db-importer.php:29
+msgid "Restore archive not found."
+msgstr "Không tìm thấy bản lưu trữ khôi phục."
+
+#: includes/class-grabwp-restore-db-importer.php:68
+#, php-format
+msgid "Database import failed: %s"
+msgstr "Nhập cơ sở dữ liệu thất bại: %s"
+
+#: includes/class-grabwp-restore-db-importer.php:127
+#: includes/class-grabwp-restore-db-importer.php:147
+msgid "Archive contains a database statement larger than the server limit."
+msgstr "Bản lưu trữ chứa một câu lệnh cơ sở dữ liệu lớn hơn giới hạn của máy chủ."
+
+#: includes/class-grabwp-restore-db-importer.php:162
+msgid "Cannot open restore archive."
+msgstr "Không thể mở bản lưu trữ khôi phục."
+
+#: includes/class-grabwp-restore-db-importer.php:167
+msgid "Archive database.sql could not be read."
+msgstr "Không thể đọc database.sql của bản lưu trữ."
+
+#: includes/class-grabwp-restore-db-importer.php:208
+msgid "Archive contains a prohibited database operation."
+msgstr "Bản lưu trữ chứa một thao tác cơ sở dữ liệu bị cấm."
+
+#: includes/class-grabwp-restore-db-importer.php:212
+msgid "Archive contains SQL outside the exported site tables."
+msgstr "Bản lưu trữ chứa SQL nằm ngoài các bảng của trang web đã xuất."
+
+#: includes/class-grabwp-restore-db-importer.php:215
+msgid "Archive attempts to rename a database table."
+msgstr "Bản lưu trữ cố gắng đổi tên một bảng cơ sở dữ liệu."
+
+#: includes/class-grabwp-restore-file-restorer.php:45
+msgid "Could not stage the plugin directory outside the web root."
+msgstr "Không thể đặt thư mục plugin ra bên ngoài thư mục gốc của trang web."
+
+#: includes/class-grabwp-restore-file-restorer.php:53
+#: includes/class-grabwp-restore-file-restorer.php:63
+msgid "Could not preserve the existing directory."
+msgstr "Không thể giữ nguyên thư mục hiện có."
+
+#: includes/class-grabwp-restore-file-restorer.php:177
+#: includes/class-grabwp-restore-validator.php:227
+msgid "WordPress could not initialize the filesystem."
+msgstr "WordPress không thể khởi tạo hệ thống tệp."
+
+#: includes/class-grabwp-restore-file-restorer.php:181
+#: includes/class-grabwp-restore-validator.php:231
+msgid "Restore requires direct filesystem access."
+msgstr "Khôi phục yêu cầu quyền truy cập hệ thống tệp trực tiếp."
+
+#: includes/class-grabwp-restore-step-controller.php:31
+msgid "Invalid restore step."
+msgstr "Bước khôi phục không hợp lệ."
+
+#: includes/class-grabwp-restore-step-controller.php:48
+msgid "Archive validated."
+msgstr "Bản lưu trữ đã được xác thực."
+
+#: includes/class-grabwp-restore-step-controller.php:61
+msgid "Archive metadata verified."
+msgstr "Siêu dữ liệu bản lưu trữ đã được xác minh."
+
+#: includes/class-grabwp-restore-step-controller.php:87
+msgid "Database imported, prefixes rewritten, and URLs updated."
+msgstr "Đã nhập cơ sở dữ liệu, viết lại tiền tố và cập nhật URL."
+
+#: includes/class-grabwp-restore-step-controller.php:122
+msgid "No uploads directory in archive, skipped."
+msgstr "Không có thư mục tải lên trong bản lưu trữ, đã bỏ qua."
+
+#: includes/class-grabwp-restore-step-controller.php:137
+msgid "Uploads restored (old files in uploads.old/)."
+msgstr "Đã khôi phục tệp tải lên (các tệp cũ nằm trong uploads.old/)."
+
+#: includes/class-grabwp-restore-step-controller.php:145
+msgid "No plugins directory in archive, skipped."
+msgstr "Không có thư mục plugin trong bản lưu trữ, đã bỏ qua."
+
+#: includes/class-grabwp-restore-step-controller.php:160
+msgid "Plugins restored (old plugins in plugins.old/)."
+msgstr "Đã khôi phục plugin (các plugin cũ nằm trong plugins.old/)."
+
+#: includes/class-grabwp-restore-step-controller.php:168
+msgid "No themes directory in archive, skipped."
+msgstr "Không có thư mục giao diện trong bản lưu trữ, đã bỏ qua."
+
+#: includes/class-grabwp-restore-step-controller.php:183
+msgid "Themes restored (old themes in themes.old/)."
+msgstr "Đã khôi phục giao diện (các giao diện cũ nằm trong themes.old/)."
+
+#: includes/class-grabwp-restore-step-controller.php:195
+msgid "Restore complete."
+msgstr "Khôi phục hoàn tất."
+
+#: includes/class-grabwp-restore-validator.php:27
+msgid "A wp-content destination is not writable."
+msgstr "Đích wp-content không thể ghi."
+
+#: includes/class-grabwp-restore-validator.php:41
+msgid "Archive file not found."
+msgstr "Không tìm thấy tệp bản lưu trữ."
+
+#: includes/class-grabwp-restore-validator.php:59
+msgid "Archive contains too many files."
+msgstr "Bản lưu trữ chứa quá nhiều tệp."
+
+#: includes/class-grabwp-restore-validator.php:65
+#: includes/class-grabwp-restore-validator.php:149
+msgid "Archive contains an unsafe file path."
+msgstr "Bản lưu trữ chứa một đường dẫn tệp không an toàn."
+
+#: includes/class-grabwp-restore-validator.php:70
+msgid "Archive contains an unreadable entry."
+msgstr "Bản lưu trữ chứa một mục không thể đọc được."
+
+#: includes/class-grabwp-restore-validator.php:75
+msgid "Archive expands beyond the allowed size."
+msgstr "Bản lưu trữ giải nén vượt quá kích thước cho phép."
+
+#: includes/class-grabwp-restore-validator.php:79
+msgid "Archive contains an unsafe compression ratio."
+msgstr "Bản lưu trữ chứa tỷ lệ nén không an toàn."
+
+#: includes/class-grabwp-restore-validator.php:91
+msgid "Archive is missing database.sql."
+msgstr "Bản lưu trữ bị thiếu database.sql."
+
+#: includes/class-grabwp-restore-validator.php:94
+msgid "Archive is missing metadata.json."
+msgstr "Bản lưu trữ bị thiếu metadata.json."
+
+#: includes/class-grabwp-restore-validator.php:118
+#: includes/class-grabwp-restore-validator.php:270
+msgid "Cannot open archive."
+msgstr "Không thể mở bản lưu trữ."
+
+#: includes/class-grabwp-restore-validator.php:126
+msgid "Cannot create the restore destination directory."
+msgstr "Không thể tạo thư mục đích khôi phục."
+
+#: includes/class-grabwp-restore-validator.php:132
+msgid "Restore destination is not a safe directory."
+msgstr "Đích khôi phục không phải là một thư mục an toàn."
+
+#: includes/class-grabwp-restore-validator.php:161
+#: includes/class-grabwp-restore-validator.php:169
+msgid "Cannot create an archive directory."
+msgstr "Không thể tạo một thư mục bản lưu trữ."
+
+#: includes/class-grabwp-restore-validator.php:174
+msgid "Archive path escapes the restore destination."
+msgstr "Đường dẫn bản lưu trữ thoát ra khỏi đích khôi phục."
+
+#: includes/class-grabwp-restore-validator.php:180
+msgid "Cannot read an archive entry."
+msgstr "Không thể đọc một mục của bản lưu trữ."
+
+#: includes/class-grabwp-restore-validator.php:185
+msgid "Cannot write an archive entry."
+msgstr "Không thể ghi một mục của bản lưu trữ."
+
+#: includes/class-grabwp-restore-validator.php:275
+msgid "metadata.json is missing or too large."
+msgstr "metadata.json bị thiếu hoặc quá lớn."
+
+#: includes/class-grabwp-restore-validator.php:280
+msgid "metadata.json could not be read."
+msgstr "Không thể đọc metadata.json."
+
+#: includes/class-grabwp-restore-validator.php:284
+msgid "metadata.json is invalid JSON."
+msgstr "metadata.json không phải là JSON hợp lệ."
+
+#: includes/class-grabwp-restore-validator.php:288
+msgid "metadata.json is missing tenant_prefix."
+msgstr "metadata.json bị thiếu tenant_prefix."
+
+#: includes/class-grabwp-restore-validator.php:292
+msgid "metadata.json contains an invalid table prefix."
+msgstr "metadata.json chứa tiền tố bảng không hợp lệ."
+
+#: views/admin-page.php:16
+msgid "Warning: Destructive Operation"
+msgstr "Cảnh báo: Thao tác có tính phá hủy"
+
+#: views/admin-page.php:17
+msgid "This will REPLACE your entire WordPress site including the database, uploads, plugins, and themes. Your current admin credentials will be replaced by those from the backup. Existing directories will be renamed to .old — you can remove them after verifying the restore."
+msgstr "Thao tác này sẽ THAY THẾ toàn bộ trang web WordPress của bạn bao gồm cơ sở dữ liệu, tệp tải lên, plugin và giao diện. Thông tin đăng nhập quản trị viên hiện tại của bạn sẽ được thay thế bằng thông tin từ bản sao lưu. Các thư mục hiện có sẽ được đổi tên thành .old - bạn có thể xóa chúng sau khi xác minh việc khôi phục."
+
+#: views/admin-page.php:21
+msgid "Note:"
+msgstr "Lưu ý:"
+
+#: views/admin-page.php:22
+msgid "The ZIP file must fit within your server upload_max_filesize and post_max_size limits."
+msgstr "Tệp ZIP phải vừa với giới hạn upload_max_filesize và post_max_size của máy chủ của bạn."
+
+#: views/admin-page.php:32
+msgid "I understand this is destructive and I have already backed up my website."
+msgstr "Tôi hiểu đây là thao tác có tính phá hủy và tôi đã sao lưu trang web của mình."
+
+#: views/admin-page.php:37
+msgid "Upload & Restore"
+msgstr "Tải lên & Khôi phục"
