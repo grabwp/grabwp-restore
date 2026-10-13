@@ -1,0 +1,381 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: GrabWP Restore 1.0.3\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/grabwp-restore\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Arabic\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-11T19:14:52+00:00\n"
+"PO-Revision-Date: 2026-10-12 16:31+0000\n"
+"Language: ar\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: grabwp-restore\n"
+"Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));\n"
+
+#. Plugin Name of the plugin
+#: grabwp-restore.php
+#: includes/class-grabwp-restore-admin.php:32
+#: includes/class-grabwp-restore-admin.php:33
+#: views/admin-page.php:13
+msgid "GrabWP Restore"
+msgstr "GrabWP Restore"
+
+#. Description of the plugin
+#: grabwp-restore.php
+msgid "Restore a full WordPress site from a GrabWP tenant export ZIP file."
+msgstr "استعادة موقع WordPress بالكامل من ملف ZIP لتصدير مستأجر GrabWP."
+
+#. Author of the plugin
+#: grabwp-restore.php
+msgid "taicv"
+msgstr "taicv"
+
+#: includes/class-grabwp-restore-admin.php:62
+msgid "This will permanently replace your entire site. Continue?"
+msgstr "سيؤدي هذا إلى استبدال موقعك بالكامل بشكل دائم. هل تريد المتابعة؟"
+
+#: includes/class-grabwp-restore-admin.php:63
+msgid "Uploading..."
+msgstr "جارٍ الرفع..."
+
+#: includes/class-grabwp-restore-admin.php:64
+msgid "Restoring..."
+msgstr "جارٍ الاستعادة..."
+
+#: includes/class-grabwp-restore-admin.php:65
+msgid "Restore complete! Log in with the exported site credentials. You can safely remove the .old directories in wp-content/."
+msgstr "اكتملت الاستعادة! سجّل الدخول باستخدام بيانات اعتماد الموقع المُصدَّر. يمكنك إزالة أدلة .old بأمان من wp-content/."
+
+#: includes/class-grabwp-restore-admin.php:66
+msgid "Error:"
+msgstr "خطأ:"
+
+#: includes/class-grabwp-restore-admin.php:67
+msgid "Please select a ZIP file."
+msgstr "يرجى تحديد ملف ZIP."
+
+#: includes/class-grabwp-restore-admin.php:68
+msgid "Upload failed. Check the PHP upload limit and your connection."
+msgstr "فشل الرفع. تحقق من حد رفع PHP واتصالك."
+
+#: includes/class-grabwp-restore-admin.php:69
+msgid "Restore step failed."
+msgstr "فشلت خطوة الاستعادة."
+
+#: includes/class-grabwp-restore-admin.php:70
+msgid "Step request failed. The server may have timed out."
+msgstr "فشل طلب الخطوة. ربما انتهت مهلة الخادم."
+
+#: includes/class-grabwp-restore-admin.php:73
+msgid "Validating archive..."
+msgstr "جارٍ التحقق من صحة الأرشيف..."
+
+#: includes/class-grabwp-restore-admin.php:74
+msgid "Reading archive metadata..."
+msgstr "جارٍ قراءة البيانات الوصفية للأرشيف..."
+
+#: includes/class-grabwp-restore-admin.php:75
+msgid "Importing database..."
+msgstr "جارٍ استيراد قاعدة البيانات..."
+
+#: includes/class-grabwp-restore-admin.php:76
+msgid "Restoring uploads..."
+msgstr "جارٍ استعادة المرفقات..."
+
+#: includes/class-grabwp-restore-admin.php:77
+msgid "Restoring plugins..."
+msgstr "جارٍ استعادة الإضافات..."
+
+#: includes/class-grabwp-restore-admin.php:78
+msgid "Restoring themes..."
+msgstr "جارٍ استعادة القوالب..."
+
+#: includes/class-grabwp-restore-admin.php:79
+msgid "Cleaning up..."
+msgstr "جارٍ التنظيف..."
+
+#: includes/class-grabwp-restore-admin.php:92
+msgid "Unauthorized."
+msgstr "غير مصرح."
+
+#: includes/class-grabwp-restore-admin.php:99
+msgid "A restore is already in progress."
+msgstr "توجد عملية استعادة قيد التشغيل بالفعل."
+
+#: includes/class-grabwp-restore-admin.php:102
+#: includes/class-grabwp-restore-admin.php:112
+msgid "Invalid archive upload."
+msgstr "ملف الأرشيف المرفوع غير صالح."
+
+#: includes/class-grabwp-restore-admin.php:117
+msgid "Only ZIP archives are accepted."
+msgstr "يتم قبول أرشيفات ZIP فقط."
+
+#: includes/class-grabwp-restore-admin.php:138
+msgid "Could not create restore job."
+msgstr "تعذر إنشاء مهمة الاستعادة."
+
+#: includes/class-grabwp-restore-admin.php:151
+msgid "WordPress could not initialize direct filesystem access."
+msgstr "لم يتمكن WordPress من تهيئة الوصول المباشر إلى نظام الملفات."
+
+#: includes/class-grabwp-restore-admin.php:188
+msgid "Could not secure the uploaded archive."
+msgstr "تعذر تأمين الأرشيف المرفوع."
+
+#: includes/class-grabwp-restore-admin.php:193
+msgid "Could not resolve the uploaded archive path."
+msgstr "تعذر حل مسار الأرشيف المرفوع."
+
+#: includes/class-grabwp-restore-admin.php:203
+msgid "Uploaded archives must not be stored inside the web root."
+msgstr "يجب ألا يتم تخزين الأرشيفات المرفوعة داخل جذر الويب."
+
+#: includes/class-grabwp-restore-admin.php:208
+#: includes/class-grabwp-restore-validator.php:44
+msgid "PHP ZipArchive extension is required."
+msgstr "امتداد PHP ZipArchive مطلوب."
+
+#: includes/class-grabwp-restore-admin.php:213
+#: includes/class-grabwp-restore-validator.php:49
+msgid "Invalid or corrupted ZIP archive."
+msgstr "أرشيف ZIP غير صالح أو تالف."
+
+#: includes/class-grabwp-restore-admin.php:239
+msgid "Multisite restore is not supported."
+msgstr "استعادة المواقع المتعددة غير مدعومة."
+
+#: includes/class-grabwp-restore-admin.php:250
+msgid "Job not found or expired."
+msgstr "المهمة غير موجودة أو منتهية الصلاحية."
+
+#: includes/class-grabwp-restore-admin.php:261
+msgid "Invalid job token."
+msgstr "رمز المهمة غير صالح."
+
+#: includes/class-grabwp-restore-admin.php:266
+msgid "Restore is already complete."
+msgstr "الاستعادة مكتملة بالفعل."
+
+#: includes/class-grabwp-restore-admin.php:416
+#: includes/class-grabwp-restore-admin.php:432
+msgid "A private system temporary directory is required."
+msgstr "دليل نظام مؤقت خاص مطلوب."
+
+#: includes/class-grabwp-restore-admin.php:422
+msgid "Could not create a private temporary directory."
+msgstr "تعذر إنشاء دليل مؤقت خاص."
+
+#: includes/class-grabwp-restore-admin.php:426
+msgid "Could not resolve the private temporary directory."
+msgstr "تعذر حل الدليل المؤقت الخاص."
+
+#: includes/class-grabwp-restore-db-importer.php:29
+msgid "Restore archive not found."
+msgstr "لم يتم العثور على أرشيف الاستعادة."
+
+#: includes/class-grabwp-restore-db-importer.php:68
+#, php-format
+msgid "Database import failed: %s"
+msgstr "فشل استيراد قاعدة البيانات: %s"
+
+#: includes/class-grabwp-restore-db-importer.php:127
+#: includes/class-grabwp-restore-db-importer.php:147
+msgid "Archive contains a database statement larger than the server limit."
+msgstr "يحتوي الأرشيف على عبارة قاعدة بيانات أكبر من حد الخادم."
+
+#: includes/class-grabwp-restore-db-importer.php:162
+msgid "Cannot open restore archive."
+msgstr "لا يمكن فتح أرشيف الاستعادة."
+
+#: includes/class-grabwp-restore-db-importer.php:167
+msgid "Archive database.sql could not be read."
+msgstr "تعذرت قراءة database.sql من الأرشيف."
+
+#: includes/class-grabwp-restore-db-importer.php:208
+msgid "Archive contains a prohibited database operation."
+msgstr "يحتوي الأرشيف على عملية قاعدة بيانات محظورة."
+
+#: includes/class-grabwp-restore-db-importer.php:212
+msgid "Archive contains SQL outside the exported site tables."
+msgstr "يحتوي الأرشيف على SQL خارج جداول الموقع المُصدَّر."
+
+#: includes/class-grabwp-restore-db-importer.php:215
+msgid "Archive attempts to rename a database table."
+msgstr "يحاول الأرشيف إعادة تسمية جدول قاعدة بيانات."
+
+#: includes/class-grabwp-restore-file-restorer.php:45
+msgid "Could not stage the plugin directory outside the web root."
+msgstr "تعذر تجهيز دليل الإضافة خارج جذر الويب."
+
+#: includes/class-grabwp-restore-file-restorer.php:53
+#: includes/class-grabwp-restore-file-restorer.php:63
+msgid "Could not preserve the existing directory."
+msgstr "تعذر الاحتفاظ بالدليل الموجود."
+
+#: includes/class-grabwp-restore-file-restorer.php:177
+#: includes/class-grabwp-restore-validator.php:227
+msgid "WordPress could not initialize the filesystem."
+msgstr "لم يتمكن WordPress من تهيئة نظام الملفات."
+
+#: includes/class-grabwp-restore-file-restorer.php:181
+#: includes/class-grabwp-restore-validator.php:231
+msgid "Restore requires direct filesystem access."
+msgstr "تتطلب الاستعادة وصولاً مباشرًا إلى نظام الملفات."
+
+#: includes/class-grabwp-restore-step-controller.php:31
+msgid "Invalid restore step."
+msgstr "خطوة الاستعادة غير صالحة."
+
+#: includes/class-grabwp-restore-step-controller.php:48
+msgid "Archive validated."
+msgstr "تم التحقق من صحة الأرشيف."
+
+#: includes/class-grabwp-restore-step-controller.php:61
+msgid "Archive metadata verified."
+msgstr "تم التحقق من البيانات الوصفية للأرشيف."
+
+#: includes/class-grabwp-restore-step-controller.php:87
+msgid "Database imported, prefixes rewritten, and URLs updated."
+msgstr "تم استيراد قاعدة البيانات، وإعادة كتابة البادئات، وتحديث الروابط."
+
+#: includes/class-grabwp-restore-step-controller.php:122
+msgid "No uploads directory in archive, skipped."
+msgstr "لا يوجد دليل uploads في الأرشيف، تم التخطي."
+
+#: includes/class-grabwp-restore-step-controller.php:137
+msgid "Uploads restored (old files in uploads.old/)."
+msgstr "تمت استعادة المرفقات (الملفات القديمة في uploads.old/)."
+
+#: includes/class-grabwp-restore-step-controller.php:145
+msgid "No plugins directory in archive, skipped."
+msgstr "لا يوجد دليل plugins في الأرشيف، تم التخطي."
+
+#: includes/class-grabwp-restore-step-controller.php:160
+msgid "Plugins restored (old plugins in plugins.old/)."
+msgstr "تمت استعادة الإضافات (الإضافات القديمة في plugins.old/)."
+
+#: includes/class-grabwp-restore-step-controller.php:168
+msgid "No themes directory in archive, skipped."
+msgstr "لا يوجد دليل themes في الأرشيف، تم التخطي."
+
+#: includes/class-grabwp-restore-step-controller.php:183
+msgid "Themes restored (old themes in themes.old/)."
+msgstr "تمت استعادة القوالب (القوالب القديمة في themes.old/)."
+
+#: includes/class-grabwp-restore-step-controller.php:195
+msgid "Restore complete."
+msgstr "اكتملت الاستعادة."
+
+#: includes/class-grabwp-restore-validator.php:27
+msgid "A wp-content destination is not writable."
+msgstr "وجهة wp-content غير قابلة للكتابة."
+
+#: includes/class-grabwp-restore-validator.php:41
+msgid "Archive file not found."
+msgstr "لم يتم العثور على ملف الأرشيف."
+
+#: includes/class-grabwp-restore-validator.php:59
+msgid "Archive contains too many files."
+msgstr "يحتوي الأرشيف على عدد كبير جدًا من الملفات."
+
+#: includes/class-grabwp-restore-validator.php:65
+#: includes/class-grabwp-restore-validator.php:149
+msgid "Archive contains an unsafe file path."
+msgstr "يحتوي الأرشيف على مسار ملف غير آمن."
+
+#: includes/class-grabwp-restore-validator.php:70
+msgid "Archive contains an unreadable entry."
+msgstr "يحتوي الأرشيف على إدخال غير قابل للقراءة."
+
+#: includes/class-grabwp-restore-validator.php:75
+msgid "Archive expands beyond the allowed size."
+msgstr "يتمدد الأرشيف إلى ما بعد الحجم المسموح به."
+
+#: includes/class-grabwp-restore-validator.php:79
+msgid "Archive contains an unsafe compression ratio."
+msgstr "يحتوي الأرشيف على نسبة ضغط غير آمنة."
+
+#: includes/class-grabwp-restore-validator.php:91
+msgid "Archive is missing database.sql."
+msgstr "الأرشيف يفتقد إلى database.sql."
+
+#: includes/class-grabwp-restore-validator.php:94
+msgid "Archive is missing metadata.json."
+msgstr "الأرشيف يفتقد إلى metadata.json."
+
+#: includes/class-grabwp-restore-validator.php:118
+#: includes/class-grabwp-restore-validator.php:270
+msgid "Cannot open archive."
+msgstr "لا يمكن فتح الأرشيف."
+
+#: includes/class-grabwp-restore-validator.php:126
+msgid "Cannot create the restore destination directory."
+msgstr "لا يمكن إنشاء دليل وجهة الاستعادة."
+
+#: includes/class-grabwp-restore-validator.php:132
+msgid "Restore destination is not a safe directory."
+msgstr "وجهة الاستعادة ليست دليلاً آمنًا."
+
+#: includes/class-grabwp-restore-validator.php:161
+#: includes/class-grabwp-restore-validator.php:169
+msgid "Cannot create an archive directory."
+msgstr "لا يمكن إنشاء دليل أرشيف."
+
+#: includes/class-grabwp-restore-validator.php:174
+msgid "Archive path escapes the restore destination."
+msgstr "مسار الأرشيف يخرج عن وجهة الاستعادة."
+
+#: includes/class-grabwp-restore-validator.php:180
+msgid "Cannot read an archive entry."
+msgstr "لا يمكن قراءة إدخال الأرشيف."
+
+#: includes/class-grabwp-restore-validator.php:185
+msgid "Cannot write an archive entry."
+msgstr "لا يمكن كتابة إدخال الأرشيف."
+
+#: includes/class-grabwp-restore-validator.php:275
+msgid "metadata.json is missing or too large."
+msgstr "ملف metadata.json مفقود أو كبير جدًا."
+
+#: includes/class-grabwp-restore-validator.php:280
+msgid "metadata.json could not be read."
+msgstr "تعذرت قراءة metadata.json."
+
+#: includes/class-grabwp-restore-validator.php:284
+msgid "metadata.json is invalid JSON."
+msgstr "ملف metadata.json ليس بتنسيق JSON صالح."
+
+#: includes/class-grabwp-restore-validator.php:288
+msgid "metadata.json is missing tenant_prefix."
+msgstr "ملف metadata.json يفتقد tenant_prefix."
+
+#: includes/class-grabwp-restore-validator.php:292
+msgid "metadata.json contains an invalid table prefix."
+msgstr "يحتوي metadata.json على بادئة جدول غير صالحة."
+
+#: views/admin-page.php:16
+msgid "Warning: Destructive Operation"
+msgstr "تحذير: عملية إتلافية"
+
+#: views/admin-page.php:17
+msgid "This will REPLACE your entire WordPress site including the database, uploads, plugins, and themes. Your current admin credentials will be replaced by those from the backup. Existing directories will be renamed to .old — you can remove them after verifying the restore."
+msgstr "سيؤدي هذا إلى استبدال موقع WordPress بالكامل بما في ذلك قاعدة البيانات، المرفقات، الإضافات، والقوالب. سيتم استبدال بيانات اعتماد المسؤول الحالية الخاصة بك بتلك الموجودة في النسخة الاحتياطية. سيتم إعادة تسمية الأدلة الموجودة إلى .old - يمكنك إزالتها بعد التحقق من الاستعادة."
+
+#: views/admin-page.php:21
+msgid "Note:"
+msgstr "ملاحظة:"
+
+#: views/admin-page.php:22
+msgid "The ZIP file must fit within your server upload_max_filesize and post_max_size limits."
+msgstr "يجب أن يتناسب ملف ZIP مع حدود upload_max_filesize و post_max_size الخاصة بخادمك."
+
+#: views/admin-page.php:32
+msgid "I understand this is destructive and I have already backed up my website."
+msgstr "أدرك أن هذا إجراء إتلافي وقمت بالفعل بعمل نسخة احتياطية لموقعي."
+
+#: views/admin-page.php:37
+msgid "Upload & Restore"
+msgstr "رفع واستعادة"

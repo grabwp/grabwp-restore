@@ -4,7 +4,7 @@ Tags: restore, backup, migration, import
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,9 @@ No. Restore is intentionally disabled on Multisite because replacing network-wid
 Importing the database can replace the users and sessions tables. Remaining steps therefore use a high-entropy, short-lived job token. Only a hash of that token is stored, failed attempts are limited, and abandoned temporary state expires after six hours.
 
 == Changelog ==
+
+= 1.0.5 =
+* Enhance: Bundled Arabic translation. The plugin shows in Arabic out of the box, including the six Arabic plural forms.
 
 = 1.0.4 =
 * Enhance: Bundled translations for Vietnamese, Spanish, Indonesian, French and Simplified Chinese. The plugin shows in these languages out of the box, no Loco Translate or extra language pack needed.
